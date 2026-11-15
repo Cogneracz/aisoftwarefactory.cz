@@ -1,0 +1,44 @@
+/* A 3D film: a still picture, joined by a video while it plays (assets/js/film.js). The plate of the renders is the surface colour, so the frame has no seam. */
+.film {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-3xl);
+  background: var(--surface);
+}
+
+.film img {
+  width: 100%;
+}
+
+/* A film that plays once shows its last frame when it cannot play, and starts from its first frame when it can. */
+.film__picture--start {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js .film:not(.is-still):not(.film--loop) .film__picture--start {
+    display: block;
+  }
+
+  html.js .film:not(.is-still):not(.film--loop) .film__picture--still {
+    display: none;
+  }
+}
+
+.film__video {
+  position: absolute;
+  inset: var(--spacing-0);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+}
+
+.film.is-playing .film__video {
+  opacity: 1;
+}
+
+.object3d {
+  width: 100%;
+  background: var(--surface);
+}

@@ -1,0 +1,246 @@
+/* The questions as a screening (components/faq.mjs, assets/js/faq.js): numbered questions in large type between thin
+   rules, the open one in ink with its answer, and from lg a sticky stage beside them with the 3D object of the part the
+   answer is about and its name as a giant word behind it. */
+.faq__stage {
+  display: none;
+}
+
+.faq__list {
+  interpolate-size: allow-keywords;
+}
+
+/* A rule above every question and one under the last. */
+.faq__item::before,
+.faq__list::after {
+  content: "";
+  display: block;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+.faq__question {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--spacing-200);
+  padding-block: var(--spacing-300);
+  cursor: pointer;
+  list-style: none;
+  color: var(--ink-3);
+  transition: color var(--dur-fade) var(--ease);
+}
+
+.faq__question::-webkit-details-marker {
+  display: none;
+}
+
+.faq__number {
+  padding-top: var(--spacing-75);
+  font: var(--body-4);
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.faq__q {
+  font: var(--heading-6);
+  letter-spacing: var(--tracking-tight);
+  text-wrap: balance;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .faq__question:hover {
+    color: var(--ink);
+  }
+
+  .faq__question:hover .faq__icon {
+    transform: rotate(90deg);
+  }
+}
+
+.faq__item[open] .faq__question {
+  color: var(--ink);
+}
+
+.faq__question:focus-visible {
+  outline-offset: 4px;
+  border-radius: var(--radius-lg);
+}
+
+.faq__icon {
+  margin-top: var(--spacing-50);
+  color: var(--ink);
+  transition: transform var(--dur-move) var(--ease);
+}
+
+/* The answer opens and closes with its height, so the question below slides instead of jumping (an accordion is the
+   one place a size may animate: emilkowalski/skills improve-animations AUDIT §5; tests/lib/css-contract.mjs allows it
+   for ::details-content only). */
+.faq__item::details-content {
+  block-size: 0;
+  overflow: clip;
+  transition:
+    block-size var(--dur-move) var(--ease),
+    content-visibility var(--dur-move) var(--ease) allow-discrete;
+}
+
+.faq__item[open]::details-content {
+  block-size: auto;
+}
+
+.faq__item[open] .faq__icon {
+  transform: rotate(45deg);
+}
+
+.faq__answer {
+  padding: var(--spacing-0) var(--spacing-0) var(--spacing-400);
+  padding-left: var(--spacing-600);
+  font: var(--title-2);
+  color: var(--ink-2);
+}
+
+.faq__answer p {
+  max-width: var(--measure);
+}
+
+.faq__thumb {
+  width: min(100%, 320px);
+  margin-top: var(--spacing-200);
+}
+
+/* The answer's words rise into place as it opens. */
+.faq__item[open] .faq__answer p {
+  animation: rise var(--dur-move) var(--ease) both;
+}
+
+@media (min-width: 768px) {
+  .faq__q {
+    font: var(--heading-5);
+  }
+
+  .faq__number {
+    padding-top: var(--spacing-100);
+  }
+}
+
+/* From lg: the stage on the left, sticky; the heading and the questions on the right. */
+@media (min-width: 1024px) {
+  .faq {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: start;
+    gap: var(--spacing-700);
+  }
+
+  .faq__stage {
+    position: sticky;
+    top: var(--spacing-900);
+    display: grid;
+    aspect-ratio: 4 / 5;
+    max-height: calc(100svh - 2 * var(--spacing-900));
+    width: 100%;
+    /* The pictures are wider than the column (their plate is the page's colour); the column is their edge. */
+    overflow-x: clip;
+  }
+
+  .faq__layer {
+    grid-area: 1 / 1;
+    position: relative;
+    display: grid;
+    place-items: center;
+    opacity: 0;
+    transform: translate3d(0, var(--spacing-400), 0) scale(0.94);
+    transition:
+      opacity var(--dur-move) var(--ease),
+      transform var(--dur-move) var(--ease);
+  }
+
+  .faq__layer.is-current {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* The renders have an opaque plate of the page's colour, so the giant word lies over the picture and darkens only
+     what is lighter than itself: it shows on the plate and stays behind the darker object. */
+  .faq__ghost {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    font: var(--ghost-3);
+    letter-spacing: var(--tracking-ghost);
+    color: var(--ghost);
+    white-space: nowrap;
+    mix-blend-mode: darken;
+    /* --fit makes every name about as wide as a five-letter one; 1.25 sets that width to the stage's. */
+    transform: translate(-50%, -62%) scale(calc(var(--fit, 1) * 1.25));
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .faq__object {
+    position: relative;
+    width: 112%;
+    max-width: none;
+  }
+
+  .faq__thumb {
+    display: none;
+  }
+
+  .faq__object--line {
+    width: 128%;
+  }
+
+  .faq__caption {
+    position: absolute;
+    bottom: 6%;
+    left: 50%;
+    display: flex;
+    gap: var(--spacing-100);
+    font: var(--body-4);
+    color: var(--ink);
+    white-space: nowrap;
+    transform: translateX(-50%);
+  }
+
+  .faq__caption span + span {
+    color: var(--accent);
+  }
+
+  .faq__question {
+    gap: var(--spacing-300);
+    padding-block: var(--spacing-400);
+  }
+
+  .faq__q {
+    font: var(--heading-4);
+  }
+
+  .faq__number {
+    padding-top: var(--spacing-200);
+  }
+
+  .faq__answer {
+    padding-left: var(--spacing-700);
+    font: var(--title-1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq__item[open] .faq__answer p {
+    animation: none;
+  }
+
+  .faq__icon,
+  .faq__layer {
+    transition: none;
+  }
+
+  .faq__question:hover .faq__icon {
+    transform: none;
+  }
+
+  .faq__item[open] .faq__icon {
+    transform: rotate(45deg);
+  }
+}

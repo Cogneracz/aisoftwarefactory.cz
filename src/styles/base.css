@@ -1,0 +1,389 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: var(--spacing-900);
+}
+
+html.is-menu-open {
+  overflow: hidden;
+}
+
+body {
+  margin: var(--spacing-0);
+  background: var(--bg);
+  color: var(--ink);
+  font: var(--body-3);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+figure {
+  margin: var(--spacing-0);
+}
+
+ul,
+ol {
+  padding: var(--spacing-0);
+  list-style: none;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
+img,
+svg,
+picture {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* Named text styles, for use as classes where a component does not set its own. */
+.heading-1 { font: var(--heading-1); letter-spacing: var(--tracking-tight); }
+.heading-2 { font: var(--heading-2); letter-spacing: var(--tracking-tight); }
+.heading-3 { font: var(--heading-3); letter-spacing: var(--tracking-tight); }
+.heading-4 { font: var(--heading-4); }
+.heading-5 { font: var(--heading-5); }
+.heading-6 { font: var(--heading-6); }
+.title-1 { font: var(--title-1); }
+.title-2 { font: var(--title-2); }
+.title-3 { font: var(--title-3); }
+.title-4 { font: var(--title-4); }
+.title-5 { font: var(--title-5); }
+.body-1 { font: var(--body-1); }
+.body-2 { font: var(--body-2); }
+.body-3 { font: var(--body-3); }
+.body-4 { font: var(--body-4); }
+.body-5 { font: var(--body-5); }
+.body-6 { font: var(--body-6); }
+.caption-1 { font: var(--caption-1); }
+.caption-2 { font: var(--caption-2); }
+.caption-3 { font: var(--caption-3); }
+.caption-4 { font: var(--caption-4); }
+.caption-5 { font: var(--caption-5); }
+
+.skip-link {
+  position: absolute;
+  z-index: 100;
+  top: var(--spacing-100);
+  left: var(--spacing-100);
+  padding: var(--spacing-75) var(--spacing-100);
+  border-radius: var(--radius-lg);
+  background: var(--ink);
+  color: var(--bg);
+  font: var(--button-sm);
+  text-decoration: none;
+  transform: translateY(-300%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+.container {
+  width: min(100% - 2 * var(--spacing-200), var(--container));
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: var(--spacing-700);
+}
+
+/* An alternate band: the floor the objects stand on, a shade under the page's plate. */
+.section--surface {
+  background: var(--floor);
+}
+
+.section__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-200);
+  max-width: var(--measure-wide);
+  margin-bottom: var(--spacing-500);
+}
+
+.section__head--center {
+  margin-inline: auto;
+  text-align: center;
+  align-items: center;
+}
+
+.section__title {
+  font: var(--display-6);
+  letter-spacing: var(--tracking-display);
+}
+
+.section__lead {
+  max-width: var(--measure);
+  font: var(--title-2);
+  color: var(--ink-2);
+}
+
+.section__more {
+  margin-top: var(--spacing-400);
+}
+
+.eyebrow {
+  font: var(--body-4);
+  color: var(--accent);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-25) var(--spacing-75);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-full);
+  font: var(--caption-4);
+  color: var(--ink-2);
+  letter-spacing: normal;
+}
+
+.mark {
+  flex: none;
+  width: 28px;
+  height: 28px;
+}
+
+.icon {
+  flex: none;
+}
+
+/* Links in running text. */
+.link {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--line-strong);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: text-decoration-color var(--dur-fade) var(--ease);
+}
+
+.link:hover {
+  text-decoration-color: var(--ink);
+}
+
+/* The arrow is part of the line of text and is bound to the last word (arrowLabel), so it never stands alone. */
+.link__end {
+  white-space: nowrap;
+}
+
+.link--out,
+.link--more {
+  font: var(--body-2);
+}
+
+.link--out .icon,
+.link--more .icon {
+  display: inline-block;
+  margin-left: var(--spacing-50);
+  vertical-align: middle;
+  transition: transform var(--dur-fade) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .link--out:hover .icon {
+    transform: translate(2px, -2px);
+  }
+
+  .link--more:hover .icon {
+    transform: translateX(2px);
+  }
+}
+
+/* Buttons are pills; the pseudo-element widens the touch target without changing the look. */
+.button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-75);
+  padding: var(--spacing-100) var(--spacing-300);
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  font: var(--button-md);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-fade) var(--ease),
+    border-color var(--dur-fade) var(--ease),
+    transform var(--dur-press) var(--ease);
+}
+
+.button::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--spacing-50));
+}
+
+.button:active {
+  transform: scale(0.97);
+}
+
+.button--sm {
+  padding: var(--spacing-75) var(--spacing-200);
+  font: var(--button-sm);
+}
+
+.button--lg {
+  padding: var(--spacing-200) var(--spacing-400);
+  font: var(--button-lg);
+}
+
+.button--primary {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button--primary:hover {
+    background: var(--ink-hover);
+  }
+}
+
+.button--secondary {
+  border-color: var(--line-strong);
+  background: var(--panel);
+  color: var(--ink);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button--secondary:hover {
+    border-color: var(--ink);
+    background: var(--surface);
+  }
+}
+
+.button__icon {
+  transition: transform var(--dur-fade) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button:hover .button__icon {
+    transform: translateX(2px);
+  }
+}
+
+/* Section reveal: rises once as it enters (assets/js/reveal.js). Without scripts everything is simply shown. */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(var(--spacing-400));
+  transition:
+    opacity var(--dur-reveal) var(--ease) calc(var(--i, 0) * var(--stagger)),
+    transform var(--dur-reveal) var(--ease) calc(var(--i, 0) * var(--stagger));
+}
+
+.js .reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Shown in place on a language switch: already read on the other page, so no second entrance. */
+.js .reveal.is-instant {
+  transition: none;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--spacing-300));
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    width: min(100% - 2 * var(--spacing-400), var(--container));
+  }
+
+  .section__title {
+    font: var(--display-5);
+  }
+
+  .section__lead {
+    font: var(--title-1);
+  }
+
+  .section__head {
+    margin-bottom: var(--spacing-600);
+  }
+}
+
+@media (min-width: 1024px) {
+  .section {
+    padding-block: var(--spacing-900);
+  }
+
+  .section__title {
+    font: var(--display-3);
+  }
+
+  .section__head {
+    gap: var(--spacing-300);
+    margin-bottom: var(--spacing-700);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal {
+    transform: none;
+    transition: opacity var(--dur-fade) var(--ease);
+  }
+
+  .button:active,
+  .button:hover .button__icon,
+  .link--out:hover .icon,
+  .link--more:hover .icon {
+    transform: none;
+  }
+}
+
+@media print {
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .site-header {
+    position: static;
+  }
+}
+

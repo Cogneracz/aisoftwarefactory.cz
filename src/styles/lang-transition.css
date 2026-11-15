@@ -1,0 +1,59 @@
+/* Switching language (src/lib/lang-switch.mjs, assets/js/lang.js): where the browser can, the old page cross-fades
+   into the same place of the new one. The head's script lets only a language switch through; with reduced motion
+   there is no transition at all. */
+
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root),
+::view-transition-old(scene-captions),
+::view-transition-new(scene-captions) {
+  animation-duration: var(--dur-move);
+  animation-timing-function: var(--ease);
+}
+
+/* A scroll scene's picture and the story's 3D object are drawn by scripts after the first paint, so the new page's
+   picture of them is still empty: the old page's last frame stays until the transition ends, instead of blinking out. */
+.scene__canvas {
+  view-transition-name: scene-picture;
+}
+
+.story__object {
+  view-transition-name: story-object;
+}
+
+/* A named picture is drawn above the page, so what lies over it needs a name too: the scene's captions keep their place
+   above the picture and blend like the page. */
+.scene__captions {
+  view-transition-name: scene-captions;
+}
+
+::view-transition-old(scene-picture),
+::view-transition-new(scene-picture),
+::view-transition-old(story-object),
+::view-transition-new(story-object) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* On a phone the switch starts under the open menu (assets/js/lang.js marks it): there the pictures stay part of the
+   page beneath the panel, and on the other page they arrive with the page instead of ahead of it. */
+html.is-lang-under-menu .scene__canvas,
+html.is-lang-under-menu .scene__captions,
+html.is-lang-under-menu .story__object {
+  view-transition-name: none;
+}
+
+::view-transition-new(scene-picture):only-child,
+::view-transition-new(story-object):only-child {
+  animation: fade var(--dur-move) var(--ease) both;
+}
+
+::view-transition-old(scene-picture):only-child,
+::view-transition-old(story-object):only-child {
+  animation: fade var(--dur-move) var(--ease) reverse both;
+}

@@ -1,0 +1,40 @@
+/* Plain text pages: a narrow column. */
+.prose {
+  display: grid;
+  gap: var(--spacing-600);
+  max-width: var(--measure);
+  padding-bottom: var(--spacing-900);
+  /* The text column stands under the centred heading. */
+  margin-inline: auto;
+}
+
+.prose__section {
+  display: grid;
+  gap: var(--spacing-200);
+  scroll-margin-top: var(--spacing-900);
+}
+
+.prose__heading {
+  font: var(--heading-5);
+}
+
+.prose p,
+.prose li {
+  font: var(--body-3);
+  color: var(--ink-2);
+}
+
+.prose__list {
+  display: grid;
+  gap: var(--spacing-100);
+  padding-left: var(--spacing-300);
+  list-style: disc;
+}
+
+/* The 404 page's line in the other language. */
+.not-found-other {
+  padding-bottom: var(--spacing-900);
+  font: var(--body-3);
+  color: var(--ink-2);
+}
+

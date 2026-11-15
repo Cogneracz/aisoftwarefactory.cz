@@ -1,0 +1,61 @@
+/* The proof block: the claim, and beside it what backs it. */
+.proof {
+  display: grid;
+  gap: var(--spacing-300);
+}
+
+.proof__head {
+  display: grid;
+  gap: var(--spacing-200);
+}
+
+.proof__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-300);
+}
+
+.proof__text {
+  max-width: var(--measure);
+  font: var(--title-1);
+  color: var(--ink-2);
+}
+
+@media (min-width: 1024px) {
+  .proof {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+    align-items: start;
+    gap: var(--spacing-700);
+  }
+
+  .proof__body {
+    padding-top: var(--spacing-500);
+  }
+}
+
+/* The line's story: its heading, centred and large, stands on the story's own surface directly above the pinned stage. */
+.line {
+  background: var(--surface);
+}
+
+.line__head {
+  padding-top: var(--spacing-700);
+}
+
+.line__head .section__head {
+  margin-inline: auto;
+  margin-bottom: var(--spacing-0);
+  align-items: center;
+  text-align: center;
+}
+
+@media (min-width: 1024px) {
+  .line__head {
+    padding-top: var(--spacing-900);
+  }
+
+  .line__head .section__title {
+    font: var(--display-2);
+  }
+}

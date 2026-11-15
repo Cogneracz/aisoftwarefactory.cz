@@ -1,0 +1,11 @@
+/* A real screen in its frame. The background is the plate colour of the pictures, so a picture has no visible edge. */
+.screen {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-2xl);
+  background: var(--surface);
+}
+
+.screen img {
+  width: 100%;
+}

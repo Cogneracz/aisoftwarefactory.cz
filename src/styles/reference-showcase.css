@@ -1,0 +1,192 @@
+/* What the factory built: a deck of wide picture cards, each one link to its case study. As written it is a plain
+   list; assets/js/stack.js adds .is-stack where motion is welcome and the cards fit the screen, and then the cards
+   stick under the bar and slide over one another with the scroll. */
+.refs {
+  display: grid;
+  gap: var(--spacing-300);
+  margin-top: var(--spacing-600);
+}
+
+.ref {
+  display: grid;
+  align-content: start;
+  height: 100%;
+  padding: var(--spacing-75);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-3xl);
+  background: var(--panel);
+  text-decoration: none;
+  transition:
+    border-color var(--dur-fade) var(--ease),
+    transform var(--dur-fade) var(--ease);
+}
+
+.ref:hover {
+  border-color: var(--ink);
+  transform: translateY(-2px);
+}
+
+.ref:active {
+  transform: scale(0.98);
+}
+
+/* The picture's plate is the renders' own colour; its radius is the card's less the gap. */
+.ref__media {
+  overflow: hidden;
+  border-radius: var(--radius-2xl);
+  background: var(--surface);
+}
+
+.ref__media img {
+  width: 100%;
+}
+
+.ref__text {
+  display: grid;
+  justify-items: start;
+  align-content: start;
+  gap: var(--spacing-75);
+  padding: var(--spacing-300) var(--spacing-200) var(--spacing-200);
+}
+
+.ref__field {
+  font: var(--caption-1);
+  color: var(--ink-3);
+}
+
+.ref__name {
+  font: var(--heading-5);
+  letter-spacing: var(--tracking-tight);
+}
+
+/* The arrow that says the card leaves the site stays on the line with the name's last word. */
+.ref__name .icon {
+  display: inline-block;
+  margin-left: var(--spacing-50);
+  vertical-align: middle;
+  color: var(--ink-3);
+  transition: transform var(--dur-fade) var(--ease);
+}
+
+.ref:hover .ref__name .icon {
+  transform: translate(2px, -2px);
+}
+
+.ref__line {
+  font: var(--body-3);
+  color: var(--ink-2);
+}
+
+.ref__built {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-75) var(--spacing-100);
+  margin-top: var(--spacing-100);
+  font: var(--caption-4);
+  color: var(--ink-3);
+}
+
+.ref__part {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-50);
+  color: var(--ink-2);
+}
+
+.ref__part .mark {
+  width: 20px;
+  height: 20px;
+}
+
+.refs__note {
+  max-width: var(--measure);
+  margin-top: var(--spacing-300);
+  font: var(--caption-2);
+  color: var(--ink-3);
+}
+
+/* Wide: the system's line on the left, its laptop and phone on the right. */
+@media (min-width: 1024px) {
+  .refs {
+    gap: var(--spacing-400);
+  }
+
+  .ref {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    align-items: center;
+  }
+
+  .ref__media {
+    order: 2;
+  }
+
+  .ref__text {
+    gap: var(--spacing-100);
+    padding: var(--spacing-400);
+  }
+
+  .ref__name {
+    font: var(--heading-4);
+  }
+
+  .ref__line {
+    font: var(--title-2);
+  }
+}
+
+/* ---------- The deck (set by assets/js/stack.js) ---------- */
+
+/* Every card sticks at the same place; each lies one step lower than the one before, so the cards under it keep an
+   edge in view. A covered card steps back (--cover: 0 to 1), and an arriving card's picture drifts into place
+   (--drift: 1 to 0). */
+html.js .refs.is-stack {
+  padding-bottom: var(--spacing-700);
+}
+
+html.js .refs.is-stack .ref-item {
+  position: sticky;
+  top: var(--spacing-900);
+  transform: translateY(calc(var(--n, 0) * var(--spacing-200))) scale(calc(1 - var(--cover, 0) * 0.05));
+  transform-origin: center top;
+  will-change: transform;
+}
+
+/* A covered card pales under a veil of the page's colour. The card itself stays opaque: it still covers the cards
+   under it, and a see-through card would show their text through its own. */
+html.js .refs.is-stack .ref {
+  position: relative;
+}
+
+html.js .refs.is-stack .ref::after {
+  content: "";
+  position: absolute;
+  inset: var(--spacing-0);
+  border-radius: inherit;
+  background: var(--bg);
+  opacity: calc(var(--cover, 0) * 0.6);
+  pointer-events: none;
+}
+
+/* In the deck a card does not lift on hover: its place is the scroll's. */
+html.js .refs.is-stack .ref:hover,
+html.js .refs.is-stack .ref:active {
+  transform: none;
+}
+
+html.js .refs.is-stack .ref__media img {
+  transform: translateY(calc(var(--drift, 0) * var(--spacing-500))) scale(calc(1 + var(--drift, 0) * 0.06));
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ref {
+    transition: border-color var(--dur-fade) var(--ease);
+  }
+
+  .ref:hover,
+  .ref:active,
+  .ref:hover .ref__name .icon {
+    transform: none;
+  }
+}

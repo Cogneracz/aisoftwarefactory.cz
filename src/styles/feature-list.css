@@ -1,0 +1,42 @@
+.features {
+  display: grid;
+  gap: var(--spacing-200);
+}
+
+.feature {
+  display: grid;
+  align-content: start;
+  gap: var(--spacing-100);
+  padding: var(--spacing-300);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-2xl);
+  background: var(--panel);
+}
+
+.feature__title {
+  font: var(--heading-6);
+}
+
+.feature__body {
+  font: var(--body-3);
+  color: var(--ink-2);
+}
+
+@media (min-width: 768px) {
+  .features {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-300);
+  }
+}
+
+@media (min-width: 1024px) {
+  .feature {
+    padding: var(--spacing-400);
+  }
+
+  /* Three columns only when no row would end on a lone card. */
+  .features[data-count="3"],
+  .features[data-count="6"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

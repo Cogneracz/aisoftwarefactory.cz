@@ -1,0 +1,47 @@
+/* The principle: the page's second statement, centred and large; its words are lit one by one as it is read. */
+.tagline {
+  padding-block: var(--spacing-800);
+  text-align: center;
+}
+
+.tagline__text {
+  max-width: var(--measure-wide);
+  margin-inline: auto;
+  font: var(--display-6);
+  letter-spacing: var(--tracking-display);
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+/* With scripts the words start muted and are lit one by one (assets/js/tagline.js). */
+.js .tagline__word {
+  color: var(--ink-muted);
+  transition: color var(--dur-move) var(--ease);
+}
+
+.js .tagline__word.is-on {
+  color: var(--ink);
+}
+
+@media (min-width: 768px) {
+  .tagline__text {
+    font: var(--display-5);
+  }
+}
+
+@media (min-width: 1024px) {
+  .tagline {
+    padding-block: var(--spacing-900);
+  }
+
+  .tagline__text {
+    font: var(--display-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .tagline__word {
+    color: var(--ink);
+    transition: none;
+  }
+}

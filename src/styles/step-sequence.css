@@ -1,0 +1,58 @@
+.steps {
+  display: grid;
+  gap: var(--spacing-600);
+}
+
+.step {
+  display: grid;
+  gap: var(--spacing-300);
+}
+
+.step__copy {
+  display: grid;
+  align-content: start;
+  gap: var(--spacing-75);
+}
+
+.step__number {
+  font: var(--caption-3);
+  color: var(--ink-3);
+}
+
+.step__title {
+  font: var(--heading-5);
+}
+
+.step__body {
+  font: var(--body-3);
+  color: var(--ink-2);
+}
+
+.step .screen {
+  background: var(--surface);
+}
+
+@media (min-width: 1024px) {
+  .steps {
+    gap: var(--spacing-800);
+  }
+
+  /* Copy and screen side by side, alternating down the page. */
+  .step {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    align-items: center;
+    gap: var(--spacing-700);
+  }
+
+  .step:nth-child(even) {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  }
+
+  .step:nth-child(even) .step__copy {
+    order: 2;
+  }
+
+  .step__title {
+    font: var(--heading-4);
+  }
+}

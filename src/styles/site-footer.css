@@ -1,0 +1,116 @@
+.site-footer {
+  padding-block: var(--spacing-700) var(--spacing-500);
+  background: var(--surface);
+}
+
+.site-footer__top {
+  display: grid;
+  gap: var(--spacing-200);
+  margin-bottom: var(--spacing-600);
+}
+
+.site-footer__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-100);
+  justify-self: start;
+  font: var(--body-1);
+  text-decoration: none;
+}
+
+.site-footer__statement {
+  max-width: var(--measure);
+  font: var(--body-3);
+  color: var(--ink-2);
+}
+
+.site-footer__nav {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spacing-500) var(--spacing-300);
+}
+
+.site-footer__heading {
+  margin-bottom: var(--spacing-100);
+  font: var(--caption-1);
+  color: var(--ink-3);
+}
+
+.site-footer__col ul {
+  display: grid;
+  gap: var(--spacing-75);
+}
+
+.site-footer__link {
+  font: var(--body-5);
+  color: var(--ink);
+  text-decoration: none;
+  transition: color var(--dur-fade) var(--ease);
+}
+
+.site-footer__link:hover {
+  color: var(--ink-3);
+}
+
+.site-footer__link .icon {
+  display: inline-block;
+  margin-left: var(--spacing-50);
+  vertical-align: middle;
+}
+
+/* A rule across the footer, drawn as its own element so no box carries a one-sided border. */
+.site-footer__legal {
+  display: grid;
+  gap: var(--spacing-200);
+  margin-top: var(--spacing-600);
+}
+
+.site-footer__legal::before {
+  content: "";
+  height: 1px;
+  margin-bottom: var(--spacing-200);
+  background: var(--line-strong);
+}
+
+.site-footer__imprint {
+  max-width: 800px;
+  font: var(--caption-2);
+  color: var(--ink-3);
+}
+
+.site-footer__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-100) var(--spacing-300);
+  font: var(--caption-2);
+  color: var(--ink-3);
+}
+
+@media (min-width: 768px) {
+  .site-footer__nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .site-footer {
+    padding-block: var(--spacing-900) var(--spacing-600);
+  }
+
+  .site-footer .container {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: var(--spacing-0) var(--spacing-700);
+  }
+
+  .site-footer__top {
+    margin-bottom: var(--spacing-0);
+  }
+
+  .site-footer__legal {
+    grid-column: 1 / -1;
+    margin-top: var(--spacing-700);
+  }
+}

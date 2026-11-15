@@ -1,0 +1,330 @@
+/*
+ * The assembly scene: a tall section whose stage pins under the navigation bar while the film follows the scroll.
+ * The frames are drawn on the surface colour, so the film has no edge. Sizes that follow the film (the caption's place
+ * in the frame) are set as shares of the frame, not as spacing.
+ */
+.scene {
+  position: relative;
+  background: var(--surface);
+}
+
+.scene__intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-200);
+  padding-top: var(--spacing-700);
+  padding-bottom: var(--spacing-200);
+}
+
+.scene__intro .section__title,
+.scene__intro .section__lead {
+  max-width: var(--measure);
+}
+
+.scene__sticky {
+  display: none;
+}
+
+/* A page's heading that stands directly above a scene is the scene's heading: it shares the scene's surface. */
+.hero:has(+ .scene) {
+  background: var(--surface);
+}
+
+/* Under a page's own heading the scene has no heading block: the stills start a little below the section's edge. */
+.scene:not(:has(.scene__intro)) .scene__steps {
+  padding-top: var(--spacing-600);
+}
+
+.scene-more {
+  padding-block: var(--spacing-400) var(--spacing-700);
+  background: var(--surface);
+}
+
+/* The stops as stills with their captions: shown without scripts, with reduced motion or save-data, and in print. */
+.scene__steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr));
+  gap: var(--spacing-600) var(--spacing-300);
+  padding-block: var(--spacing-400) var(--spacing-600);
+}
+
+.scene__step img {
+  width: 100%;
+  border-radius: var(--radius-2xl);
+}
+
+.scene__step-text {
+  max-width: 420px;
+  margin-top: var(--spacing-200);
+  font: var(--title-1);
+  color: var(--ink-3);
+}
+
+.scene__step-text span {
+  color: var(--ink);
+}
+
+/* With scripts and motion: the pinned stage replaces the stills. About one screen of scroll per stop. */
+html.js .scene:not(.is-static) {
+  height: 520vh;
+  height: 520svh;
+}
+
+html.js .scene:not(.is-static) .scene__steps {
+  display: none;
+}
+
+html.js .scene:not(.is-static) .scene__sticky {
+  position: sticky;
+  top: var(--spacing-800);
+  display: block;
+  height: calc(100vh - var(--spacing-800));
+  height: calc(100svh - var(--spacing-800));
+  overflow: hidden;
+}
+
+/* Landscape: the 16:9 frame is as large as the stage allows and sits on the rail. */
+.scene__stage {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) var(--spacing-900);
+  justify-items: center;
+  height: 100%;
+}
+
+.scene__frame {
+  position: relative;
+  align-self: end;
+  width: min(100vw, calc((100svh - var(--spacing-800) - var(--spacing-900)) * 16 / 9));
+  aspect-ratio: 16 / 9;
+}
+
+/* The film's bottom edge and, in a window wider than the film, its sides dissolve into the section, so a film drawn on
+   a studio backdrop has no visible frame. A mask, not a background: the page's backgrounds stay flat. */
+.scene__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  -webkit-mask-image:
+    linear-gradient(to bottom, black calc(100% - var(--spacing-600)), transparent),
+    linear-gradient(
+      to right,
+      transparent,
+      black clamp(0px, calc((100vw - min(100vw, calc((100svh - var(--spacing-800) - var(--spacing-900)) * 16 / 9))) / 2), var(--spacing-800)),
+      black calc(100% - clamp(0px, calc((100vw - min(100vw, calc((100svh - var(--spacing-800) - var(--spacing-900)) * 16 / 9))) / 2), var(--spacing-800))),
+      transparent
+    );
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to bottom, black calc(100% - var(--spacing-600)), transparent),
+    linear-gradient(
+      to right,
+      transparent,
+      black clamp(0px, calc((100vw - min(100vw, calc((100svh - var(--spacing-800) - var(--spacing-900)) * 16 / 9))) / 2), var(--spacing-800)),
+      black calc(100% - clamp(0px, calc((100vw - min(100vw, calc((100svh - var(--spacing-800) - var(--spacing-900)) * 16 / 9))) / 2), var(--spacing-800))),
+      transparent
+    );
+  mask-composite: intersect;
+}
+
+/* Captions stand where the film leaves room: top left, in the first 46 % of the frame's width. */
+.scene__captions {
+  position: absolute;
+  inset: var(--spacing-0);
+  display: grid;
+  grid-template-columns: 4.2fr 42fr 53.8fr;
+  grid-template-rows: 7.8fr 92.2fr;
+  pointer-events: none;
+}
+
+.scene__caption {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.scene__line {
+  font: var(--heading-5);
+  color: var(--ink-3);
+  text-wrap: balance;
+}
+
+.scene__w.is-lead {
+  color: var(--ink);
+}
+
+/* Each word rises through its own mask: landing one after another once the old caption has cleared, leaving upwards
+   when the scroll moves on and downwards when it goes back. */
+.scene__w {
+  display: inline-block;
+  overflow: clip;
+  vertical-align: top;
+  padding-block: var(--spacing-50) var(--spacing-75);
+  margin-block: calc(-1 * var(--spacing-50)) calc(-1 * var(--spacing-75));
+}
+
+.scene__w > span {
+  display: inline-block;
+  transform: translateY(110%);
+  opacity: 0;
+  transition:
+    transform var(--dur-fade) var(--ease) calc(var(--k, 0) * var(--stagger-out)),
+    opacity var(--dur-fade) var(--ease) calc(var(--k, 0) * var(--stagger-out));
+}
+
+.scene__caption.is-past .scene__w > span {
+  transform: translateY(-110%);
+}
+
+.scene__caption.is-active .scene__w > span {
+  transform: none;
+  opacity: 1;
+  transition:
+    transform var(--dur-reveal) var(--ease) calc(var(--dur-fade) + var(--k, 0) * var(--stagger-word)),
+    opacity var(--dur-fade) var(--ease) calc(var(--dur-fade) + var(--k, 0) * var(--stagger-word));
+}
+
+/* The chapter rail: one hairline per stop, filled by the film (the script sets --f, 0 to 1). */
+.scene__rail {
+  display: flex;
+  align-self: center;
+  gap: var(--spacing-75);
+  width: min(var(--container), calc(100% - 2 * var(--spacing-200)));
+}
+
+.scene__seg {
+  flex: 1 1 0;
+  max-width: 120px;
+}
+
+.scene__seg i {
+  position: relative;
+  display: block;
+  height: 2px;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--line-strong);
+}
+
+.scene__seg i::after {
+  content: "";
+  position: absolute;
+  inset: var(--spacing-0);
+  background: var(--ink);
+  transform: scaleX(var(--f, 0));
+  transform-origin: left;
+}
+
+.scene__seg b {
+  display: block;
+  margin-top: var(--spacing-100);
+  font: var(--caption-5);
+  color: var(--ink-3);
+  transition: color var(--dur-fade) var(--ease);
+}
+
+.scene__seg.is-active b {
+  color: var(--ink);
+}
+
+/* Portrait stages (phones, upright tablets): the 4:5 cut, the caption in the film's band above the picture, the rail below. */
+@media (max-aspect-ratio: 11/10) {
+  html.js .scene:not(.is-static) {
+    height: 440vh;
+    height: 440svh;
+  }
+
+  .scene__stage {
+    grid-template-rows: minmax(0, 1fr) auto minmax(0, 0.8fr) var(--spacing-600);
+  }
+
+  .scene__frame {
+    grid-row: 2;
+    align-self: auto;
+    width: min(100vw, calc((100svh - var(--spacing-800) - var(--spacing-600) - var(--spacing-500)) * 4 / 5));
+    aspect-ratio: 4 / 5;
+  }
+
+  .scene__canvas {
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black var(--spacing-600), black calc(100% - var(--spacing-600)), transparent);
+    mask-image: linear-gradient(to bottom, transparent, black var(--spacing-600), black calc(100% - var(--spacing-600)), transparent);
+  }
+
+  .scene__rail {
+    grid-row: 4;
+    align-self: start;
+  }
+
+  .scene__captions {
+    grid-template-columns: 6.25fr 87.5fr 6.25fr;
+    grid-template-rows: 17.6fr 82.4fr;
+  }
+
+  .scene__caption {
+    grid-row: 1;
+    align-self: end;
+  }
+
+  .scene__line {
+    font: var(--heading-6);
+  }
+}
+
+@media (max-width: 767px) {
+  .scene__seg {
+    max-width: none;
+  }
+
+  .scene__seg b {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .scene__intro {
+    gap: var(--spacing-300);
+  }
+}
+
+@media (min-width: 1024px) {
+  .scene__intro {
+    padding-top: var(--spacing-900);
+  }
+
+  .scene-more {
+    padding-bottom: var(--spacing-900);
+  }
+}
+
+@media (min-width: 1280px) and (min-aspect-ratio: 11/10) {
+  .scene__line {
+    font: var(--heading-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .scene:not(.is-static) {
+    height: auto;
+  }
+
+  html.js .scene:not(.is-static) .scene__sticky {
+    display: none;
+  }
+
+  html.js .scene:not(.is-static) .scene__steps {
+    display: grid;
+  }
+}
+
+@media print {
+  html.js .scene:not(.is-static) {
+    height: auto;
+  }
+
+  html.js .scene:not(.is-static) .scene__sticky {
+    display: none;
+  }
+
+  html.js .scene:not(.is-static) .scene__steps {
+    display: grid;
+  }
+}

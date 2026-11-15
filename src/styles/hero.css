@@ -1,0 +1,229 @@
+/* The opening of a page. Its heading is the page's largest statement: heavy, tight, the first line in ink and the
+   following lines a shade back. The stacked hero (the home page) is centred above its film, which runs the full width
+   of the window with no frame: the film's backdrop is the page's own plate. */
+.hero {
+  padding-block: var(--spacing-600) var(--spacing-700);
+}
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--spacing-600);
+}
+
+.hero__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-300);
+}
+
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-75);
+  font: var(--body-4);
+  color: var(--ink);
+}
+
+.hero__title {
+  font: var(--display-5);
+  letter-spacing: var(--tracking-display);
+  color: var(--ink);
+}
+
+.hero__line + .hero__line {
+  color: var(--ink-soft);
+}
+
+@media (forced-colors: active) {
+  .hero__line + .hero__line {
+    color: CanvasText;
+  }
+}
+
+.hero__lead {
+  max-width: var(--measure);
+  font: var(--title-2);
+  color: var(--ink-2);
+}
+
+.hero__proof {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-75);
+  font: var(--caption-1);
+  color: var(--ink-3);
+}
+
+.hero--split .hero__media {
+  width: min(100%, 480px);
+  margin-inline: auto;
+}
+
+/* Stacked and plain: the copy stands in the middle. */
+.hero--stacked .hero__copy,
+.hero--plain .hero__copy {
+  align-items: center;
+  text-align: center;
+}
+
+.hero--stacked {
+  padding-bottom: var(--spacing-0);
+}
+
+/* The stacked hero's grid spans the window, so the film can; the copy keeps the container's width. */
+.hero--stacked .hero__grid {
+  width: 100%;
+  gap: var(--spacing-400);
+}
+
+.hero--stacked .hero__copy {
+  position: relative;
+  z-index: 1;
+  width: min(100% - 2 * var(--spacing-200), var(--container));
+  margin-inline: auto;
+}
+
+.hero--stacked .hero__media {
+  width: min(100%, 1920px);
+  margin-inline: auto;
+}
+
+/* The film has no frame here and is cropped towards its subject, so the line of objects is in the first screen. */
+.hero--stacked .film {
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-sm);
+  background: transparent;
+}
+
+.hero--stacked .film img,
+.hero--stacked .film__video {
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 58%;
+}
+
+.hero--plain {
+  padding-bottom: var(--spacing-500);
+}
+
+/* Entrance on load, CSS only: the copy rises in reading order; the picture moves but is never faded. */
+.hero__copy > * {
+  animation: rise var(--dur-move) var(--ease) both;
+  animation-delay: calc(var(--i, 0) * var(--stagger));
+}
+
+.hero__media {
+  animation: hero-media var(--dur-reveal) var(--ease) both;
+}
+
+/* The opening (assets/js/opening.js): as the hero leaves the screen (--o, 0 to 1) its words rise and fade and the film
+   moves closer. */
+html.js .hero--stacked .hero__copy {
+  opacity: calc(1 - var(--o, 0) * 0.9);
+  transform: translate3d(0, calc(var(--o, 0) * -1 * var(--spacing-800)), 0);
+}
+
+html.js .hero--stacked .film {
+  transform: scale(calc(1 + var(--o, 0) * 0.12));
+  transform-origin: 50% 85%;
+}
+
+/* The film grows inside the hero: it never widens the page. */
+html.js .hero--stacked {
+  overflow-x: clip;
+}
+
+/* A language switch lands on a page already read: the entrance does not play again. */
+html.is-lang-arrival :is(.hero__copy > *, .hero__media) {
+  animation: none;
+}
+
+@keyframes hero-media {
+  from {
+    transform: translateY(var(--spacing-400));
+  }
+}
+
+@media (min-width: 768px) {
+  .hero--stacked .hero__copy {
+    width: min(100% - 2 * var(--spacing-400), var(--container));
+  }
+
+  .hero--stacked .film {
+    aspect-ratio: 2 / 1;
+  }
+
+  .hero__title {
+    font: var(--display-4);
+  }
+
+  .hero__line {
+    display: block;
+  }
+
+  .hero__lead {
+    font: var(--title-1);
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero {
+    padding-block: var(--spacing-800) var(--spacing-900);
+  }
+
+  .hero--split .hero__grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: center;
+    gap: var(--spacing-700);
+  }
+
+  .hero--split .hero__media {
+    width: 100%;
+  }
+
+  .hero--stacked {
+    padding-block: var(--spacing-700) var(--spacing-0);
+  }
+
+  .hero--stacked .hero__grid {
+    gap: var(--spacing-500);
+  }
+
+  .hero--stacked .hero__title,
+  .hero--plain .hero__title {
+    font: var(--display-2);
+  }
+
+  .hero--stacked .film {
+    aspect-ratio: 2.6 / 1;
+  }
+
+  .hero--stacked .film img,
+  .hero--stacked .film__video {
+    object-position: 50% 92%;
+  }
+
+  .hero--plain {
+    padding-bottom: var(--spacing-600);
+  }
+}
+
+/* Wide: the home page's heading at full size. */
+@media (min-width: 1280px) {
+  .hero--stacked .hero__title {
+    font: var(--display-1);
+  }
+
+  .hero--split .hero__title {
+    font: var(--display-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__copy > *,
+  .hero__media {
+    animation: none;
+  }
+}

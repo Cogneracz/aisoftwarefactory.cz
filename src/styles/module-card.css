@@ -1,0 +1,118 @@
+/* The five module cards: tiles of the renders' own plate colour, so each object stands in its tile with no inner box,
+   and lifts from the floor when pointed at. */
+.module-grid {
+  display: grid;
+  gap: var(--spacing-200);
+}
+
+.module-card {
+  display: grid;
+  align-content: start;
+  gap: var(--spacing-50);
+  height: 100%;
+  padding: var(--spacing-200) var(--spacing-200) var(--spacing-300);
+  border: 1px solid transparent;
+  border-radius: var(--radius-3xl);
+  background: var(--surface);
+  text-decoration: none;
+  transition:
+    border-color var(--dur-fade) var(--ease),
+    transform var(--dur-press) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .module-card:hover {
+    border-color: var(--line-strong);
+    transform: translateY(-4px);
+  }
+
+  .module-card:hover .module-card__object {
+    transform: scale(1.06);
+  }
+}
+
+.module-card:active {
+  transform: scale(0.97);
+}
+
+.module-card__object {
+  margin-bottom: var(--spacing-100);
+  transition: transform var(--dur-move) var(--ease);
+}
+
+.module-card__role {
+  padding-inline: var(--spacing-100);
+  font: var(--body-4);
+  color: var(--accent);
+}
+
+.module-card__name {
+  padding-inline: var(--spacing-100);
+  font: var(--heading-5);
+  letter-spacing: var(--tracking-tight);
+}
+
+.module-card__line {
+  margin-top: var(--spacing-50);
+  padding-inline: var(--spacing-100);
+  font: var(--body-6);
+  color: var(--ink-2);
+}
+
+.module-index {
+  padding-block: var(--spacing-700);
+}
+
+/* On a phone the index is a compact jump list: two columns, names only, the base across the last row. */
+@media (max-width: 767px) {
+  .module-index .module-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-100);
+  }
+
+  .module-index .module-card {
+    padding: var(--spacing-200);
+  }
+
+  .module-index .module-card__object {
+    margin-bottom: var(--spacing-100);
+  }
+
+  .module-index .module-card__line {
+    display: none;
+  }
+
+  .module-index .module-card-item:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 768px) {
+  .module-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .module-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .module-index {
+    padding-block: var(--spacing-800) var(--spacing-600);
+  }
+}
+
+@media (min-width: 1280px) {
+  .module-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .module-card:hover,
+  .module-card:active,
+  .module-card:hover .module-card__object {
+    transform: none;
+  }
+}
