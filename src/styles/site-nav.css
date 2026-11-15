@@ -223,3 +223,16 @@
     transition: none;
   }
 }
+
+/* Touch: the brand is a 44 px tall target. */
+@media (pointer: coarse) {
+  .site-nav__brand {
+    position: relative;
+  }
+
+  .site-nav__brand::after {
+    content: "";
+    position: absolute;
+    inset: calc(-1 * var(--spacing-50));
+  }
+}

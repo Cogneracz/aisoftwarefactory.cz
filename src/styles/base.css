@@ -100,7 +100,7 @@ a {
   z-index: 100;
   top: var(--spacing-100);
   left: var(--spacing-100);
-  padding: var(--spacing-75) var(--spacing-100);
+  padding: var(--spacing-100) var(--spacing-200);
   border-radius: var(--radius-lg);
   background: var(--ink);
   color: var(--bg);
@@ -387,3 +387,22 @@ a {
   }
 }
 
+/* Touch: every link at least 44 px tall to the finger, through an invisible hit area; the look does not change. */
+@media (pointer: coarse) {
+  .link {
+    position: relative;
+  }
+
+  .link::after {
+    content: "";
+    position: absolute;
+    inset: calc(-1 * var(--spacing-100)) calc(-1 * var(--spacing-50));
+  }
+}
+
+/* Phones: no labelling text under 14 px. */
+@media (max-width: 767px) {
+  .tag {
+    font: var(--caption-1);
+  }
+}

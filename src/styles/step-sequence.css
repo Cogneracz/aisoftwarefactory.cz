@@ -56,3 +56,10 @@
     font: var(--heading-4);
   }
 }
+
+/* Phones: no labelling text under 14 px. */
+@media (max-width: 767px) {
+  .step__number {
+    font: var(--caption-1);
+  }
+}

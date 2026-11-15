@@ -242,7 +242,7 @@ a {
   z-index: 100;
   top: var(--spacing-100);
   left: var(--spacing-100);
-  padding: var(--spacing-75) var(--spacing-100);
+  padding: var(--spacing-100) var(--spacing-200);
   border-radius: var(--radius-lg);
   background: var(--ink);
   color: var(--bg);
@@ -529,6 +529,26 @@ a {
   }
 }
 
+/* Touch: every link at least 44 px tall to the finger, through an invisible hit area; the look does not change. */
+@media (pointer: coarse) {
+  .link {
+    position: relative;
+  }
+
+  .link::after {
+    content: "";
+    position: absolute;
+    inset: calc(-1 * var(--spacing-100)) calc(-1 * var(--spacing-50));
+  }
+}
+
+/* Phones: no labelling text under 14 px. */
+@media (max-width: 767px) {
+  .tag {
+    font: var(--caption-1);
+  }
+}
+
 /* site-nav.css */
 /* The bar floats off the top edge, centred and sized to its content. */
 .site-header {
@@ -756,6 +776,19 @@ a {
   }
 }
 
+/* Touch: the brand is a 44 px tall target. */
+@media (pointer: coarse) {
+  .site-nav__brand {
+    position: relative;
+  }
+
+  .site-nav__brand::after {
+    content: "";
+    position: absolute;
+    inset: calc(-1 * var(--spacing-50));
+  }
+}
+
 /* site-footer.css */
 .site-footer {
   padding-block: var(--spacing-700) var(--spacing-500);
@@ -871,6 +904,28 @@ a {
   .site-footer__legal {
     grid-column: 1 / -1;
     margin-top: var(--spacing-700);
+  }
+}
+
+/* Touch: each footer link a 44 px tall row (20 px of text, 12 px above and below), the brand a 44 px target. */
+@media (pointer: coarse) {
+  .site-footer__col ul {
+    gap: var(--spacing-0);
+  }
+
+  .site-footer__link {
+    display: inline-block;
+    padding-block: var(--spacing-100);
+  }
+
+  .site-footer__brand {
+    position: relative;
+  }
+
+  .site-footer__brand::after {
+    content: "";
+    position: absolute;
+    inset: calc(-1 * var(--spacing-75));
   }
 }
 
@@ -1818,6 +1873,12 @@ html.js .scene:not(.is-static) .scene__sticky {
   color: var(--ink-3);
 }
 
+@media (max-width: 767px) {
+  .story__number {
+    font: var(--caption-1);
+  }
+}
+
 .story__step-title {
   margin-top: var(--spacing-50);
   font: var(--heading-6);
@@ -1902,6 +1963,11 @@ html.js .story.is-motion .story__chapter.is-current {
   pointer-events: auto;
 }
 
+/* A neighbour dissolving in or out beside the chapter on stage (assets/js/story.js): painted, not interactive. */
+html.js .story.is-motion .story__chapter.is-near {
+  visibility: visible;
+}
+
 /* The giant word: the back layer and the slowest. --fit keeps a longer name about as wide as a short one. */
 html.js .story.is-motion .story__ghost {
   display: block;
@@ -1927,16 +1993,19 @@ html.js .story.is-motion .story__proofs {
 html.js .story.is-motion .story__grid {
   position: relative;
   height: 100%;
+  /* A column of the frame's width, never of its content's: the screens' stack no longer clips its cards, and an auto
+     column grew to 606 px on a 390 px phone, pushing the headline past the edge (15. 11. 2026). */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-areas: "copy" "screens";
   grid-template-rows: auto minmax(0, 1fr);
   gap: var(--spacing-300);
 }
 
-/* Copy, in front of everything and slow. */
+/* Copy, in front of everything and slow. Its words hand over in turn (--t); the pictures behind dissolve (--p). */
 html.js .story.is-motion .story__copy {
   position: relative;
   z-index: 3;
-  opacity: var(--p, 0);
+  opacity: var(--t, var(--p, 0));
   transform: translate3d(calc(var(--x, 0) * var(--spacing-600)), calc((0.5 - var(--l, 0.5)) * var(--spacing-400)), 0);
 }
 
@@ -1997,7 +2066,7 @@ html.js .story.is-motion .story__screens {
   transform-origin: right center;
 }
 
-html.js .story.is-motion .story__chapter.is-current :is(.story__copy, .story__proofs, .story__screens, .story__ghost) {
+html.js .story.is-motion .story__chapter:is(.is-current, .is-near) :is(.story__copy, .story__proofs, .story__screens, .story__ghost) {
   will-change: transform, opacity;
 }
 
@@ -2079,12 +2148,13 @@ html.js .story.is-motion .story__progress {
   transform: translateX(-50%);
 }
 
+/* On phones the names are 14 px and each mark is a 44 px tall touch target. */
 html.js .story.is-motion .story__mark {
   position: relative;
   display: grid;
   gap: var(--spacing-25);
-  padding-top: var(--spacing-100);
-  font: var(--caption-3);
+  padding-block: var(--spacing-100);
+  font: var(--body-4);
   color: var(--ink-3);
   text-decoration: none;
   transition: color var(--dur-fade) var(--ease);
@@ -2162,7 +2232,7 @@ html.js .story.is-motion .story__mark-role {
 /* The film frame, from lg and in any landscape window from md: the giant word high in the middle, the card top right,
    the object across the middle, the decision in the lower left with all the chapter's steps under it, the one on stage
    with its sentence. */
-@media (min-width: 1024px), (min-width: 768px) and (orientation: landscape) {
+@media (min-width: 1024px), (min-width: 768px) and (orientation: landscape), (orientation: landscape) and (max-height: 480px) {
   html.js .story.is-motion .story__chapter {
     padding-block: var(--spacing-400) var(--spacing-900);
   }
@@ -2187,7 +2257,7 @@ html.js .story.is-motion .story__mark-role {
     z-index: 3;
     align-self: start;
     padding-top: var(--spacing-400);
-    opacity: var(--p, 0);
+    opacity: var(--t, var(--p, 0));
     transform: translate3d(calc(var(--x, 0) * var(--spacing-600)), calc((0.5 - var(--l, 0.5)) * var(--spacing-600)), 0);
   }
 
@@ -2346,6 +2416,78 @@ html.js .story.is-motion .story__mark-role {
   }
 }
 
+/* A phone on its side (up to 480 px tall): the frame without the part's name line, the step's sentence or the outward
+   link, a smaller headline, only the step on stage, and the row of chapters as bars that are still 48 px tall targets. */
+@media (orientation: landscape) and (max-height: 480px) {
+  html.js .story.is-motion .story__chapter {
+    padding-block: var(--spacing-100) var(--spacing-700);
+  }
+
+  html.js .story.is-motion .story__proofs,
+  html.js .story.is-motion .story__name,
+  html.js .story.is-motion .story__more,
+  html.js .story.is-motion .story__mark-name,
+  html.js .story.is-motion .story__mark-role {
+    display: none;
+  }
+
+  html.js .story.is-motion .story__step .story__sentence {
+    display: none;
+  }
+
+  html.js .story.is-motion .story__ghost {
+    font: var(--ghost-3);
+  }
+
+  html.js .story.is-motion .story__copy {
+    padding-bottom: var(--spacing-0);
+  }
+
+  html.js .story.is-motion .story__role .mark {
+    width: 24px;
+    height: 24px;
+  }
+
+  html.js .story.is-motion .story__headline {
+    margin-top: var(--spacing-75);
+    font: var(--display-6);
+  }
+
+  html.js .story.is-motion .story__steps {
+    margin-top: var(--spacing-100);
+  }
+
+  html.js .story.is-motion .story__step {
+    grid-area: 1 / 1;
+  }
+
+  html.js .story.is-motion .story__step:not(.is-current) {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  html.js .story.is-motion .story__step-title {
+    font: var(--title-2);
+  }
+
+  html.js .story.is-motion .story__screens {
+    width: 80%;
+  }
+
+  html.js .story.is-motion .story__object {
+    bottom: 16%;
+    width: 36%;
+  }
+
+  html.js .story.is-motion .story__progress {
+    bottom: var(--spacing-0);
+  }
+
+  html.js .story.is-motion .story__mark {
+    padding-block: var(--spacing-600) var(--spacing-0);
+  }
+}
+
 /* reference-showcase.css */
 /* What the factory built: a deck of wide picture cards, each one link to its case study. As written it is a plain
    list; assets/js/stack.js adds .is-stack where motion is welcome and the cards fit the screen, and then the cards
@@ -2446,6 +2588,12 @@ html.js .story.is-motion .story__mark-role {
 .ref__part .mark {
   width: 20px;
   height: 20px;
+}
+
+@media (max-width: 767px) {
+  .ref__built {
+    font: var(--caption-1);
+  }
 }
 
 .refs__note {
@@ -2658,6 +2806,13 @@ html.is-lang-under-menu .story__object {
 
   .step__title {
     font: var(--heading-4);
+  }
+}
+
+/* Phones: no labelling text under 14 px. */
+@media (max-width: 767px) {
+  .step__number {
+    font: var(--caption-1);
   }
 }
 

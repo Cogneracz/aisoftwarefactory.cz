@@ -156,7 +156,7 @@ test("error: on the stage a step never shows through a chapter that is off stage
   assert.deepEqual(offStage.declarations, [{ prop: "visibility", value: "hidden" }]);
   // The script clears what the inline priming set before it takes over.
   const script = await readFile(new URL("../assets/js/story.js", import.meta.url), "utf8");
-  assert.match(script, /for \(const name of \["--p", "--l", "--x"\]\) c\.style\.removeProperty\(name\);/);
+  assert.match(script, /for \(const name of \["--p", "--t", "--l", "--x"\]\) c\.style\.removeProperty\(name\);/);
 });
 
 test("expected: each chapter shows what can be counted on there, without repeating its headline; the story ends at the base", () => {
@@ -211,7 +211,7 @@ test("expected: a step change moves the screens as a stack; the script and the p
   assert.equal(value(rule("html.js .story.is-motion .story__screen.is-current + .story__screen"), "opacity"), "0.55");
   assert.match(value(rule("html.js .story.is-motion .story__screen.is-past"), "transform"), /^translate3d\(-/);
   const script = await readFile(new URL("../assets/js/story.js", import.meta.url), "utf8");
-  assert.match(script, /s\.classList\.toggle\("is-past", k < pos\.beat\)/);
+  assert.match(script, /s\.classList\.toggle\("is-past", k < beat\)/);
   assert.match(script, /const OMEGA = 15;/);
 });
 
@@ -221,13 +221,37 @@ test("edge: in the film frame the 3D object keeps to the right half and never cr
   const css = await readFile(new URL("../src/styles/module-story.css", import.meta.url), "utf8");
   // The owner's screenshot of 15. 11. 2026: Bellows's wide bellows lay over its headline.
   const frame = parseRules(css).filter((r) => r.selector === "html.js .story.is-motion .story__object" && r.context.some((c) => c.includes("orientation: landscape") || c.includes("max-height: 760px")));
-  assert.equal(frame.length, 2, "the frame's rule and the short window's rule");
+  assert.equal(frame.length, 3, "the frame's rule, the short window's rule and the phone on its side's rule");
   for (const rule of frame) {
     const width = rule.declarations.find((d) => d.prop === "width")?.value;
     assert.ok(width && parseFloat(width) < 50, `${rule.context.join(" ")}: width ${width} stays under half the frame`);
   }
-  const main = frame.find((r) => r.context.some((c) => c.includes("orientation: landscape")));
+  const main = frame.find((r) => r.context.some((c) => c.includes("min-width: 1024px")));
   const value = (prop) => main.declarations.find((d) => d.prop === prop)?.value;
   assert.deepEqual([value("left"), value("right")], ["auto", "0"]);
   assert.equal(value("transform").includes("-50%"), false, "anchored to the right, not centred");
+});
+
+test("edge: on a phone the stage's single column is the frame's width, so the headline wraps", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const { parseRules } = await import("./lib/css-contract.mjs");
+  const css = await readFile(new URL("../src/styles/module-story.css", import.meta.url), "utf8");
+  const grid = parseRules(css).find((r) => r.selector === "html.js .story.is-motion .story__grid" && r.context.length === 0);
+  assert.equal(grid.declarations.find((d) => d.prop === "grid-template-columns")?.value, "minmax(0, 1fr)");
+});
+
+test("expected: between chapters the pictures dissolve while the words hand over in turn, so no two texts overlap", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const { parseRules } = await import("./lib/css-contract.mjs");
+  const css = await readFile(new URL("../src/styles/module-story.css", import.meta.url), "utf8");
+  const opacity = (selector) => parseRules(css).find((r) => r.selector === selector && r.context.length === 0)?.declarations.find((d) => d.prop === "opacity")?.value;
+  assert.equal(opacity("html.js .story.is-motion .story__copy"), "var(--t, var(--p, 0))");
+  assert.equal(opacity("html.js .story.is-motion .story__screens"), "var(--p, 0)");
+  assert.equal(opacity("html.js .story.is-motion .story__ghost"), "var(--p, 0)");
+  const near = parseRules(css).find((r) => r.selector === "html.js .story.is-motion .story__chapter.is-near");
+  assert.deepEqual(near.declarations, [{ prop: "visibility", value: "visible" }]);
+  const script = await readFile(new URL("../assets/js/story.js", import.meta.url), "utf8");
+  // A neighbour shows its pictures and never its words.
+  assert.match(script, /c\.style\.setProperty\("--t", "0"\);/);
+  assert.match(script, /crossPresence\(g, i, n\)/);
 });

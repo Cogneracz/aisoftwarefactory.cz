@@ -114,3 +114,25 @@
     margin-top: var(--spacing-700);
   }
 }
+
+/* Touch: each footer link a 44 px tall row (20 px of text, 12 px above and below), the brand a 44 px target. */
+@media (pointer: coarse) {
+  .site-footer__col ul {
+    gap: var(--spacing-0);
+  }
+
+  .site-footer__link {
+    display: inline-block;
+    padding-block: var(--spacing-100);
+  }
+
+  .site-footer__brand {
+    position: relative;
+  }
+
+  .site-footer__brand::after {
+    content: "";
+    position: absolute;
+    inset: calc(-1 * var(--spacing-75));
+  }
+}

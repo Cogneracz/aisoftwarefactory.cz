@@ -46,6 +46,9 @@ A change is ready when `npm test` passes; one of its tests is the `--check` abov
 - **Visual contract.** Font sizes come from the named text styles (`display-*` and `ghost-*` for the largest type),
   spacing from the thirteen spacing tokens, radii and timing from their tokens; backgrounds are flat; no italics; no
   one-sided borders.
+- **Touch.** On coarse pointers every link and button is at least 44 px tall to the finger (invisible `::after` areas
+  or padding, the look unchanged); below 768 px no labelling text is under 14 px. `tests/touch.test.mjs` keeps the
+  rules; every hand-written script must parse (`tests/scripts-load.test.mjs`).
 - **The look.** The page is the studio plate of the renders and screens (`--bg`), so films and 3D objects stand on it
   without a frame; one accent, the ember (`--accent`), marks place: captions, a chapter's number, the chapter on stage.
 - **Nothing from another origin.** No cookies, no analytics, no third-party request. The page `/provozovatel/` says
