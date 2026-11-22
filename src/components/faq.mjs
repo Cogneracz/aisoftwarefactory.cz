@@ -1,15 +1,14 @@
 /**
  * Questions and answers as a screening: the questions in large type, numbered, as native disclosures (usable without
- * scripts, one open at a time), and beside them a stage that shows the 3D object of the part of the factory the open
+ * scripts, one open at a time), and beside them a stage that shows the logo of the part of the factory the open
  * answer is about, its name as a giant word behind it. assets/js/faq.js changes the stage when a question opens or is
  * pointed at; without it the stage shows the first question's part. The FAQPage structured data comes from the same
  * items, so the markup and the data cannot disagree.
  */
 import { attrs, cls, need, t } from "../lib/html.mjs";
 import { content } from "../content/index.mjs";
-import { film, object3d } from "../content/media3d.mjs";
 import { icon } from "./icons.mjs";
-import { MARK_SLUGS } from "./product-mark.mjs";
+import { MARK_SLUGS, productMark } from "./product-mark.mjs";
 import { sectionHead } from "./rich.mjs";
 
 function ghostWord(name) {
@@ -33,14 +32,9 @@ function checked(items) {
   return items;
 }
 
-/** The stage's picture of a part: the line's still for the factory, the part's render otherwise. */
-export function partPicture(mark) {
-  if (!FAQ_MARKS.includes(mark)) throw new Error(`Not a part of the factory: ${JSON.stringify(mark)}`);
-  if (mark === "factory") {
-    const still = film("factory").large;
-    return { src: still.start, width: still.width, height: still.height };
-  }
-  return object3d(mark);
+/** Questions about the whole factory use the Forge logo. */
+function faqMark(mark, className) {
+  return productMark(mark === "factory" ? "forge" : mark, { className, tile: false });
 }
 
 /** The name and role of a part, as the stage's caption and its giant word. */
@@ -56,10 +50,9 @@ export function partName(mark) {
 /** One layer of the stage per part, in the order the questions first name them. */
 function stage(marks) {
   const layers = [...new Set(marks)].map((mark, i) => {
-    const pic = partPicture(mark);
     const named = partName(mark);
     const ghost = ghostWord(named.ghost);
-    return `<div${attrs({ class: cls("faq__layer", i === 0 && "is-current"), "data-mark": mark })}><p class="faq__ghost" style="--fit: ${ghost.fit}">${t(ghost.word)}</p><img${attrs({ class: cls("faq__object", mark === "factory" && "faq__object--line"), src: pic.src, alt: "", "aria-hidden": "true", width: pic.width, height: pic.height, loading: "lazy", decoding: "async" })}><p class="faq__caption"><span>${t(named.name)}</span>${named.role ? `<span>${t(named.role)}</span>` : ""}</p></div>`;
+    return `<div${attrs({ class: cls("faq__layer", i === 0 && "is-current"), "data-mark": mark })}><p class="faq__ghost" style="--fit: ${ghost.fit}">${t(ghost.word)}</p>${faqMark(mark, "faq__mark")}<p class="faq__caption"><span>${t(named.name)}</span>${named.role ? `<span>${t(named.role)}</span>` : ""}</p></div>`;
   });
   return `<div class="faq__stage" aria-hidden="true">${layers.join("")}</div>`;
 }
@@ -72,10 +65,7 @@ export function faq({ id = "otazky", eyebrow, heading, items }) {
   });
   const rows = list
     .map((item, i) => {
-      // Phones and tablets have no stage: the open answer ends with its part's picture instead.
-      const pic = partPicture(item.mark);
-      const thumb = `<img${attrs({ class: "faq__thumb", src: pic.src, alt: "", "aria-hidden": "true", width: pic.width, height: pic.height, loading: "lazy", decoding: "async" })}>`;
-      return `<details class="faq__item" name="faq" data-mark="${item.mark}"${i === 0 ? " open" : ""}><summary class="faq__question"><span class="faq__number" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span><span class="faq__q">${t(item.q)}</span>${icon("plus", { size: 24, className: "icon faq__icon" })}</summary><div class="faq__answer"><p>${t(item.a)}</p>${thumb}</div></details>`;
+      return `<details class="faq__item" name="faq" data-mark="${item.mark}"${i === 0 ? " open" : ""}><summary class="faq__question"><span class="faq__number" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span><span class="faq__q">${t(item.q)}</span>${icon("plus", { size: 24, className: "icon faq__icon" })}</summary><div class="faq__answer"><p>${t(item.a)}</p>${faqMark(item.mark, "faq__thumb")}</div></details>`;
     })
     .join("\n");
   return `<section class="section faq-section" id="${id}" aria-labelledby="${id}-title">

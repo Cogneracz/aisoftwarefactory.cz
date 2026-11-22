@@ -17,7 +17,7 @@ test("expected: every hand-written script of the site parses, and every one but 
 
 test("edge: the site's entry imports only scripts that exist beside it", async () => {
   const site = await readFile(new URL("site.js", DIR), "utf8");
-  const imported = [...site.matchAll(/from "\.\/([a-z-]+\.js)"/g)].map((m) => m[1]);
+  const imported = [...site.matchAll(/from "\.\/([a-z-]+\.js)(?:\?v=\d+)?"/g)].map((m) => m[1]);
   assert.ok(imported.length >= 8);
   for (const file of imported) assert.ok(own.includes(file), file);
 });

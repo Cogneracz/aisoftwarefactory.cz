@@ -1,12 +1,9 @@
 /**
- * The modules' scroll story (src/components/module-story.mjs). Where motion is welcome (no reduced motion, no save-data)
- * and WebGL works (decided inline when the story is parsed), it pins one stage and carries the story to the scroll position with a spring, so the film moves at the
- * display's rate between wheel notches: the chapter on stage gets its layers' variables (presence, position, hand-over),
- * its step and screen. When the section is a screen away it loads the canvas (story-canvas.js), which draws each module's
- * film scene at the frame the position asks for. A slow device, a missing canvas or an error leaves the still chapters.
+ * The scroll position drives the active logo, copy and product screen. Motion is enabled at parse time,
+ * so fragment links and language switches land in the right layout before the module initializes.
  */
 import { pinnedProgress, springStep } from "./scrub-math.js";
-import { HANDOVER, chapterLocal, crossOffset, crossPresence, handover, presence, storyPosition } from "./story-math.js";
+import { HANDOVER, chapterLocal, crossOffset, crossPresence, presence, storyPosition } from "./story-math.js";
 
 /**
  * Spring pace (rad/s) and the distance (share of the story) at which it lands on the scroll position. A finger's scroll
@@ -20,24 +17,6 @@ const REST = 0.00005;
 const GLIDE_MS = 300;
 const GLIDE_EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 
-/** The position the canvas reads: { chapter, beat, local }, with listeners. */
-function createStore() {
-  let value = { chapter: 0, beat: 0, local: 0 };
-  const listeners = new Set();
-  return {
-    get: () => value,
-    set(next) {
-      if (next.chapter === value.chapter && next.beat === value.beat && next.local === value.local) return;
-      value = next;
-      for (const l of listeners) l();
-    },
-    subscribe(listener) {
-      listeners.add(listener);
-      return () => listeners.delete(listener);
-    },
-  };
-}
-
 export function initStory() {
   const root = document.querySelector(".story[data-story]");
   if (!root) return;
@@ -45,21 +24,18 @@ export function initStory() {
   if (!root.classList.contains("is-motion")) return;
 
   const slugs = root.dataset.story.split(",");
-  const base = root.dataset.storyBase;
   const track = root.querySelector(".story__track");
   const stage = root.querySelector(".story__stage");
-  const host = root.querySelector(".story__object");
   const chapters = [...root.querySelectorAll(".story__chapter")];
   const rail = root.querySelector(".story__progress");
   const marks = rail ? [...rail.querySelectorAll("a")] : [];
-  if (!track || !stage || !host || chapters.length !== slugs.length) return;
+  if (!track || !stage || chapters.length !== slugs.length) return;
 
   const n = chapters.length;
   // Steps per chapter: three unless the story names fewer (the line's story on the home page has two).
   const steps = Number(root.dataset.storySteps) || 3;
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
   const touch = window.matchMedia("(pointer: coarse)");
-  const store = createStore();
   let spring = { x: Number.NaN, v: 0 };
   let raf = 0;
   let last = 0;
@@ -67,8 +43,6 @@ export function initStory() {
   let shownBeat = -1;
   // Neighbouring chapters dissolving in or out beside the one on stage.
   const nearby = new Set();
-  let unmount = null;
-  let stopped = false;
 
   // The inline script at the end of the page may have marked a chapter already (from the scroll position at parse time,
   // before a browser jumps to an address's #section); this script takes over from a clean state, presence included.
@@ -94,6 +68,7 @@ export function initStory() {
 
   /** `g`: the story's position in chapters (0 to n). */
   const show = (pos, g) => {
+    stage.style.setProperty("--story-progress", (g / n).toFixed(4));
     if (shown !== pos.chapter) {
       if (shown >= 0) {
         chapters[shown].classList.remove("is-current");
@@ -153,8 +128,7 @@ export function initStory() {
       c.style.setProperty("--l", chapterLocal(g, i).toFixed(4));
       c.style.setProperty("--x", crossOffset(g, i, n).toFixed(4));
     }
-    // The chapter on stage: its screens dissolve with its neighbours' (--p); its words (--t), like
-    // the canvas's one object, hand over in turn, out completely before the next come in, so no two texts overlap.
+    // Screens crossfade while each logo and its copy hand over together.
     const first = pos.chapter === 0;
     const lastChapter = pos.chapter === n - 1;
     const turn = presence(pos.local, first, lastChapter).toFixed(4);
@@ -162,30 +136,21 @@ export function initStory() {
     chapter.style.setProperty("--t", turn);
     chapter.style.setProperty("--l", pos.local.toFixed(4));
     chapter.style.setProperty("--x", crossOffset(g, pos.chapter, n).toFixed(4));
-    const vars = [
-      ["--p", turn],
-      ["--l", pos.local.toFixed(4)],
-      ["--x", handover(pos.local, first, lastChapter).toFixed(4)],
-    ];
-    for (const [k, v] of vars) host.style.setProperty(k, v);
-    // How far through its chapter the mark on stage is.
-    rail?.style.setProperty("--l", vars[1][1]);
+    rail?.style.setProperty("--l", pos.local.toFixed(4));
   };
 
   // A jump of more than a chapter (the index, a link) lands at once instead of playing the chapters between.
   const tick = (now) => {
     raf = 0;
-    if (stopped) return;
     const target = read();
     spring = Math.abs(target - spring.x) > 1 / n || !Number.isFinite(spring.x) ? { x: target, v: 0 } : springStep(spring, target, now - last, touch.matches ? OMEGA_TOUCH : OMEGA, REST);
     last = now;
     const pos = storyPosition(spring.x, n, steps);
-    store.set(pos);
     show(pos, spring.x * n);
     if (spring.x !== target) raf = requestAnimationFrame(tick);
   };
   const request = () => {
-    if (raf || stopped) return;
+    if (raf) return;
     last = performance.now();
     raf = requestAnimationFrame(tick);
   };
@@ -203,31 +168,6 @@ export function initStory() {
     window.scrollTo({ top: chapterTop(i) });
     history.replaceState(null, "", `#${slugs[i]}`);
   };
-
-  const fallBack = () => {
-    if (stopped) return;
-    stopped = true;
-    if (raf) cancelAnimationFrame(raf);
-    unmount?.();
-    window.removeEventListener("scroll", request);
-    window.removeEventListener("resize", request);
-    document.removeEventListener("click", onClick);
-    root.classList.remove("is-motion");
-  };
-
-  const near = new IntersectionObserver(
-    ([entry]) => {
-      if (!entry.isIntersecting || unmount) return;
-      near.disconnect();
-      import("./story-canvas.js")
-        .then((m) => {
-          if (!stopped) unmount = m.mount(host, { slugs, store, base, onSlow: fallBack });
-        })
-        .catch(fallBack);
-    },
-    { rootMargin: "100% 0px" },
-  );
-  near.observe(track);
 
   window.addEventListener("scroll", request, { passive: true });
   window.addEventListener("resize", request);

@@ -1,5 +1,4 @@
-/* The five module cards: tiles of the renders' own plate colour, so each object stands in its tile with no inner box,
-   and lifts from the floor when pointed at. */
+/* Each module links to its chapter through its official mark and name. */
 .module-grid {
   display: grid;
   gap: var(--spacing-200);
@@ -26,7 +25,7 @@
     transform: translateY(-4px);
   }
 
-  .module-card:hover .module-card__object {
+  .module-card:hover .module-card__logo {
     transform: scale(1.06);
   }
 }
@@ -35,7 +34,9 @@
   transform: scale(0.97);
 }
 
-.module-card__object {
+.module-card__logo {
+  width: var(--spacing-700);
+  height: var(--spacing-700);
   margin-bottom: var(--spacing-100);
   transition: transform var(--dur-move) var(--ease);
 }
@@ -74,8 +75,9 @@
     padding: var(--spacing-200);
   }
 
-  .module-index .module-card__object {
-    margin-bottom: var(--spacing-100);
+  .module-index .module-card__logo {
+    width: var(--spacing-500);
+    height: var(--spacing-500);
   }
 
   .module-index .module-card__line {
@@ -112,7 +114,7 @@
 @media (prefers-reduced-motion: reduce) {
   .module-card:hover,
   .module-card:active,
-  .module-card:hover .module-card__object {
+  .module-card:hover .module-card__logo {
     transform: none;
   }
 }

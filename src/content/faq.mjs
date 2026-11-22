@@ -1,7 +1,7 @@
 /**
  * The questions a buyer asks about an AI software factory. Every answer is made of sentences cognera.cz publishes
- * about Forge and its modules; none adds a claim. `mark` names the part of the factory an answer is about, whose 3D
- * object the questions' stage shows ("factory": the whole line).
+ * about Forge and its modules; none adds a claim. `mark` identifies the product logo shown with the answer.
+ * Questions about the whole line use the Forge logo.
  */
 export const FAQ = [
   {

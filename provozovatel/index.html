@@ -27,7 +27,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/manrope-latin-ext-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/site.css?v=2">
 <script>(function(d){d.classList.add("js");setTimeout(function(){if(!window.__siteReady)d.classList.remove("js")},4000)})(document.documentElement)</script>
 <script>(function gateTransition(win) {
 var doc = win.document;
@@ -63,7 +63,7 @@ if (event.viewTransition && !switched) event.viewTransition.skipTransition();
 });
 return switched;
 })(window)</script>
-<script type="module" src="/assets/js/site.js"></script>
+<script type="module" src="/assets/js/site.js?v=2"></script>
 
 </head>
 <body>
@@ -166,13 +166,14 @@ var story = doc.querySelector(".story.is-motion");
 if (story) {
 var track = story.querySelector(".story__track");
 var stage = story.querySelector(".story__stage");
-var host = story.querySelector(".story__object");
 var chapters = story.querySelectorAll(".story__chapter");
 if (track && stage && chapters.length) {
 var t = track.getBoundingClientRect();
 var g = stage.getBoundingClientRect();
 var n = chapters.length;
-var pos = lib.storyPosition(lib.pinnedProgress(t.top, t.height, g.top, g.height), n, Number(story.getAttribute("data-story-steps")) || 3);
+var progress = lib.pinnedProgress(t.top, t.height, g.top, g.height);
+stage.style.setProperty("--story-progress", progress.toFixed(4));
+var pos = lib.storyPosition(progress, n, Number(story.getAttribute("data-story-steps")) || 3);
 var first = pos.chapter === 0;
 var last = pos.chapter === n - 1;
 var vars = [
@@ -196,7 +197,6 @@ screens[j].classList.toggle("is-past", j < pos.beat);
 }
 for (var v = 0; v < vars.length; v++) {
 chapter.style.setProperty(vars[v][0], vars[v][1]);
-if (host) host.style.setProperty(vars[v][0], vars[v][1]);
 }
 }
 }

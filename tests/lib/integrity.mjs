@@ -95,7 +95,7 @@ export function pageProblems(html, { path, origin, files, idsOf, allowedHosts, n
         say("structured data that is not valid JSON");
       }
     } else if (/\ssrc=/.test(attributes)) {
-      if (!/type="module" src="\/assets\/js\/site\.js"/.test(attributes)) say(`an unexpected script: ${attributes.trim()}`);
+      if (!/type="module" src="\/assets\/js\/site\.js(?:\?v=\d+)?"/.test(attributes)) say(`an unexpected script: ${attributes.trim()}`);
     } else found.push(...scriptProblems(body, `${path} (inline script)`));
   }
 

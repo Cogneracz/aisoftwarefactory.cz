@@ -91,9 +91,9 @@ test("expected: the English pages are English throughout", () => {
   assert.ok(home.includes('content="https://aisoftwarefactory.cz/assets/og-en.png"'));
   assert.ok(home.includes('<a class="skip-link" href="#obsah">Skip to content</a>'));
   assert.ok(primaryButtons(home).every((b) => b.label.replace(/&nbsp;/g, " ") === "Book a demo" && b.href === "https://cognera.cz/en#contact-form"));
-  // The home page tells the line as a story (no scroll scene); the assembly scene opens the modules page.
+  // The home page introduces the line; the modules page opens with an accessible logo index.
   assert.ok(home.includes('data-story="bellows,anvil,forge,temper,rivet,harness"') && !home.includes('data-scene="'));
-  assert.ok(built("/en/modules/").includes('<section class="scene" id="skladani" aria-label="Modules" data-scene="assembly">'));
+  assert.ok(built("/en/modules/").includes(`<section class="container module-index" id="skladani" aria-label="${CONTENT.en.modulesPage.indexLabel}">`));
   const text = plain(main(home));
   for (const part of ["Five steps. Five decisions.", "You decide what gets merged.", "A factory we work in ourselves.", "Show us your backlog."]) assert.ok(text.includes(part), part);
   assert.equal(/[ěščřžůďťň]/i.test(text), false, "no Czech sentence on the English home page");

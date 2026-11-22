@@ -37,6 +37,7 @@ export const STYLES = [
   "feature-list.css",
   "module-card.css",
   "module-story.css",
+  "story-brand.css",
   "reference-showcase.css",
   "lang-transition.css",
   "step-sequence.css",

@@ -7,7 +7,7 @@ import { promoPlayer } from "../src/components/promo-player.mjs";
 import { PROMO } from "../src/content/promo.mjs";
 import { built } from "./lib/pages.mjs";
 
-test("all four product entry pages have one accessible native hero film and localized captions", () => {
+test("all four product entry pages have one accessible native hero film and offer English captions", () => {
   for (const path of ["/", "/en/", "/forge/", "/en/forge/"]) {
     const html = built(path);
     const opening = html.match(/<section class="hero [^"]*">([\s\S]*?)<\/section>/)[1];
@@ -19,21 +19,21 @@ test("all four product entry pages have one accessible native hero film and loca
     assert.ok(player.includes(`src="${PROMO.video}" type="video/mp4"`));
     assert.ok(player.includes(`poster="${PROMO.poster}"`));
     assert.match(player, /aria-label="[^"]+"/);
-    const selected = [...player.matchAll(/<track[^>]*srclang="([^"]+)"[^>]* default>/g)].map((m) => m[1]);
-    assert.deepEqual(selected, [path.startsWith("/en/") ? "en" : "cs"]);
+    const tracks = player.match(/<track\b[^>]*>/g) ?? [];
+    assert.equal(tracks.length, 1);
+    assert.match(tracks[0], /kind="captions" srclang="en" label="English"/);
+    assert.ok(tracks[0].includes(`src="${PROMO.en}"`));
+    assert.equal(tracks[0].includes(" default"), path.startsWith("/en/"));
     assert.doesNotMatch(opening, /data-film-large|button--secondary/);
   }
 });
 
-test("subtitles share every timed cue and the web print meets the decimal upload limit", async () => {
-  const cues = async (path) => {
-    const text = await readFile(join(ROOT, path), "utf8");
-    assert.ok(text.startsWith("WEBVTT\n"));
-    return [...text.matchAll(/^[\d:.]+ --> [\d:.]+$/gm)].map(([time]) => time);
-  };
-  const english = await cues(PROMO.en);
-  assert.equal(english.length, 16);
-  assert.deepEqual(await cues(PROMO.cs), english);
+test("English captions retain all sixteen cues and the web print meets the decimal upload limit", async () => {
+  const text = await readFile(join(ROOT, PROMO.en), "utf8");
+  const [header, ...cues] = text.trim().split(/\r?\n\r?\n/);
+  assert.equal(header, "WEBVTT");
+  assert.equal(cues.length, 16);
+  for (const cue of cues) assert.match(cue, /^\d\d:\d\d\.\d{3} --> \d\d:\d\d\.\d{3}\r?\n\S/);
   const { size } = await stat(join(ROOT, PROMO.video));
   assert.ok(size > 0 && size < 20_000_000, `Web film size: ${size}`);
 });

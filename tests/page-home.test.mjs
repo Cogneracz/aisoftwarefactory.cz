@@ -29,7 +29,7 @@ test("expected: the sections follow the argument, each under its own heading", (
 test("expected: the line is one story of five chapters and its base, each under the decision a person makes, with real screens", () => {
   const body = main(html);
   const line = body.slice(body.indexOf('id="linka"'), body.indexOf('id="cognera"'));
-  assert.ok(line.includes('<div class="story" id="pribeh" data-story="bellows,anvil,forge,temper,rivet,harness" data-story-base="/assets/media/story/" data-story-steps="2">'));
+  assert.ok(line.includes('<div class="story" id="pribeh" data-story="bellows,anvil,forge,temper,rivet,harness" data-story-steps="2">'));
   assert.ok(line.includes('<div class="story__track" style="--chapters: 6; --steps: 2">'));
   assert.deepEqual([...line.matchAll(/<h3 class="story__name" id="[a-z]+-title">([^<]+)/g)].map((m) => m[1]), ["Bellows", "Anvil", "Forge", "Temper", "Rivet", "Cognera Harness"]);
   assert.deepEqual(

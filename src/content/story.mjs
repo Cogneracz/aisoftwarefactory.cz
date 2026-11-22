@@ -1,11 +1,7 @@
-/**
- * The modules' story on the modules page: short captions for each published product screen. The 3D object
- * of each chapter is the module's film scene, drawn live by assets/js/story-canvas.js; its files are listed here so the
- * build checks they are on disk.
- */
+/** Short captions for the real product screens in each logo chapter. */
 export const STORY_ORDER = ["bellows", "anvil", "temper", "rivet", "harness"];
 
-/** Where the story canvas finds the scenes' models and textures. */
+/** Source library for the archived 3D scenes, checked by the build. */
 export const STORY_MEDIA_BASE = "/assets/media/story/";
 
 export const STORY_MEDIA = [
@@ -16,7 +12,7 @@ export const STORY_MEDIA = [
   ...["brushed/grain", "brushed/normal", "brushed/rough", "leather/color", "leather/normal", "leather/rough", "scratched/normal", "scratched/rough", "walnut/color", "walnut/normal", "walnut/rough"].map((f) => `promo/tex/${f}.jpg`),
 ].map((file) => `${STORY_MEDIA_BASE}${file}`);
 
-/** The story's own script and the canvas it loads when the section is a screen away. */
+/** Published story scripts, including the archived canvas bundle. */
 export const STORY_SCRIPTS = ["/assets/js/story.js", "/assets/js/story-math.js", "/assets/js/story-canvas.js"];
 
 export const STORY = {

@@ -7,7 +7,7 @@ import { initOpening } from "./opening.js";
 import { initReveal } from "./reveal.js";
 import { initScene } from "./scene.js";
 import { initStack } from "./stack.js";
-import { initStory } from "./story.js";
+import { initStory } from "./story.js?v=2";
 import { initTagline } from "./tagline.js";
 
 // Tells the page's inline guard that the script arrived (see src/layout.mjs).

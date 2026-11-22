@@ -1,5 +1,5 @@
 /* The questions as a screening (components/faq.mjs, assets/js/faq.js): numbered questions in large type between thin
-   rules, the open one in ink with its answer, and from lg a sticky stage beside them with the 3D object of the part the
+   rules, the open one in ink with its answer, and from lg a sticky stage beside them with the logo of the part the
    answer is about and its name as a giant word behind it. */
 .faq__stage {
   display: none;
@@ -103,7 +103,9 @@
 }
 
 .faq__thumb {
-  width: min(100%, 320px);
+  display: block;
+  width: var(--spacing-600);
+  height: auto;
   margin-top: var(--spacing-200);
 }
 
@@ -138,7 +140,6 @@
     aspect-ratio: 4 / 5;
     max-height: calc(100svh - 2 * var(--spacing-900));
     width: 100%;
-    /* The pictures are wider than the column (their plate is the page's colour); the column is their edge. */
     overflow-x: clip;
   }
 
@@ -159,36 +160,29 @@
     transform: none;
   }
 
-  /* The renders have an opaque plate of the page's colour, so the giant word lies over the picture and darkens only
-     what is lighter than itself: it shows on the plate and stays behind the darker object. */
+  /* The pale word sits behind the full-colour logo. */
   .faq__ghost {
     position: absolute;
-    z-index: 1;
     top: 50%;
     left: 50%;
     font: var(--ghost-3);
     letter-spacing: var(--tracking-ghost);
     color: var(--ghost);
     white-space: nowrap;
-    mix-blend-mode: darken;
     /* --fit makes every name about as wide as a five-letter one; 1.25 sets that width to the stage's. */
     transform: translate(-50%, -62%) scale(calc(var(--fit, 1) * 1.25));
     user-select: none;
     pointer-events: none;
   }
 
-  .faq__object {
+  .faq__mark {
     position: relative;
-    width: 112%;
-    max-width: none;
+    width: min(58%, 260px);
+    height: auto;
   }
 
   .faq__thumb {
     display: none;
-  }
-
-  .faq__object--line {
-    width: 128%;
   }
 
   .faq__caption {

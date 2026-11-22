@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { productMark } from "../src/components/product-mark.mjs";
 import { LINE_STEPS, STORY_STEPS, lineStory, moduleStory } from "../src/components/module-story.mjs";
 import { LINE, LINE_ORDER, LINE_STORY_STEPS } from "../src/content/line.mjs";
 
@@ -10,6 +11,7 @@ import { STORY_ORDER } from "../src/content/story.mjs";
 import { withLocale } from "../src/i18n/index.mjs";
 
 const plain = (html) => html.replace(/&nbsp;/g, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+const mark = (slug) => productMark(slug, { className: "story__logo", tile: false });
 const story = (locale, modules) => withLocale(locale, () => moduleStory(modules ?? content().modules, { moreLabel: content().modulesPage.moreLabel }));
 const chapter = (html, slug) => html.slice(html.indexOf(`id="${slug}"`), html.indexOf("</section>", html.indexOf(`id="${slug}"`)));
 
@@ -25,13 +27,13 @@ test("expected: one chapter per module in the line's order, each with three publ
   assert.equal((rivet.match(/<h3 /g) ?? []).length, 3);
 });
 
-test("edge: as written the chapters are still: the first step and screen marked, the 3D render decorative, the canvas host empty", () => {
+test("edge: as written the chapters are still: the first step and screen marked, the actual product logo present without scripts", () => {
   const html = story("cs");
   const bellows = chapter(html, "bellows");
   assert.equal((bellows.match(/class="story__step is-current"/g) ?? []).length, 1);
   assert.equal((bellows.match(/story__screen is-current/g) ?? []).length, 1);
-  assert.ok(bellows.includes('<img class="object3d" src="/assets/media/3d/bellows.jpg" alt="" aria-hidden="true"'));
-  assert.ok(html.includes('<div class="container story__frame" aria-hidden="true"><div class="story__object"></div></div>'));
+  assert.ok(bellows.includes(mark("bellows")));
+  assert.doesNotMatch(html, /object3d|<canvas|story__object|data-story-base|assets\/media\/(?:story|3d)\//);
   assert.ok(html.includes('style="--chapters: 5"'));
   // The English chapters identify the same screens.
   const en = plain(chapter(story("en"), "harness"));
@@ -70,7 +72,7 @@ const line = (locale = "cs", extra) => withLocale(locale, () => lineStory(conten
 test("expected: the line's story has the five steps in order, each under its decision, then the base, each with two published steps and their screens", () => {
   const html = line();
   assert.deepEqual([...html.matchAll(/<section class="story__chapter" id="([a-z]+)"/g)].map((m) => m[1]), LINE_CHAPTERS);
-  assert.ok(html.startsWith('<div class="story" id="pribeh" data-story="bellows,anvil,forge,temper,rivet,harness" data-story-base="/assets/media/story/" data-story-steps="2">'));
+  assert.ok(html.startsWith('<div class="story" id="pribeh" data-story="bellows,anvil,forge,temper,rivet,harness" data-story-steps="2">'));
   assert.ok(html.includes('<div class="story__track" style="--chapters: 6; --steps: 2">'));
   const temper = chapter(html, "temper");
   for (const part of ["Temper", "Změny vzhledu schválíte podle snímků.", "Průběh testu", "Porovnání snímků"]) assert.ok(plain(temper).includes(part), part);
@@ -90,14 +92,14 @@ test("expected: the line's story has the five steps in order, each under its dec
 test("edge: Forge stands in the middle as the core with its own steps; English tells the same chapters; the modules' story is unchanged", () => {
   const forge = chapter(line(), "forge");
   assert.ok(plain(forge).includes("Forge Rozhodnete, které změny se sloučí. Plán práce Kontrola kódu"));
-  assert.ok(forge.includes('<img class="object3d" src="/assets/media/3d/forge.jpg" alt="" aria-hidden="true"'));
+  assert.ok(forge.includes(mark("forge")));
   assert.ok(forge.includes("/assets/media/screens/forge-plan.webp") && forge.includes("/assets/media/screens/forge-tile-a.webp"));
   const english = line("en");
   assert.ok(plain(chapter(english, "rivet")).includes("Rivet Confirm again before production. Release approval Deployment checks"));
   assert.deepEqual([...english.matchAll(/<section class="story__chapter" id="([a-z]+)"/g)].map((m) => m[1]), LINE_CHAPTERS);
   // Three steps are the default: the modules' story names no step count.
   const modules = story("cs");
-  assert.ok(modules.startsWith('<div class="story" id="pribeh" data-story="bellows,anvil,temper,rivet,harness" data-story-base="/assets/media/story/">'));
+  assert.ok(modules.startsWith('<div class="story" id="pribeh" data-story="bellows,anvil,temper,rivet,harness">'));
   assert.ok(modules.includes('<div class="story__track" style="--chapters: 5">'));
   assert.deepEqual(Object.keys(LINE_STORY_STEPS), LINE_CHAPTERS);
 });
@@ -119,6 +121,8 @@ test("expected: chapters have one identity, one decision and a short caption for
       for (const slug of slugs) {
         const block = chapter(html, slug);
         assert.equal((block.match(/class="story__identity"/g) ?? []).length, 1);
+        assert.equal((block.match(/class="story__logo"/g) ?? []).length, 1);
+        assert.ok(block.includes(mark(slug)), slug);
         assert.equal((block.match(/class="story__headline"/g) ?? []).length, 1);
         const labels = [...block.matchAll(/class="story__step-title">([^<]+)</g)].map((m) => plain(m[1]));
         assert.equal(labels.length, captions);
@@ -199,21 +203,22 @@ test("expected: a step change moves the screens as a stack; the script and the p
   assert.match(script, /const OMEGA = 15;/);
 });
 
-test("edge: in the film frame the 3D object keeps to the right half and never crosses the copy's column", async () => {
+test("edge: the logo stays in normal flow with its label on narrow stages, next to the product screen on wide ones", async () => {
   const { readFile } = await import("node:fs/promises");
   const { parseRules } = await import("./lib/css-contract.mjs");
   const css = await readFile(new URL("../src/styles/module-story.css", import.meta.url), "utf8");
-  // The owner's screenshot of 15. 11. 2026: Bellows's wide bellows lay over its headline.
-  const frame = parseRules(css).filter((r) => r.selector === "html.js .story.is-motion .story__object" && r.context.some((c) => c.includes("orientation: landscape") || c.includes("max-height: 760px")));
-  assert.equal(frame.length, 3, "the frame's rule, the short window's rule and the phone on its side's rule");
-  for (const rule of frame) {
-    const width = rule.declarations.find((d) => d.prop === "width")?.value;
-    assert.ok(width && parseFloat(width) < 50, `${rule.context.join(" ")}: width ${width} stays under half the frame`);
-  }
-  const main = frame.find((r) => r.context.some((c) => c.includes("min-width: 1024px")));
-  const value = (prop) => main.declarations.find((d) => d.prop === prop)?.value;
-  assert.deepEqual([value("left"), value("right")], ["auto", "0"]);
-  assert.equal(value("transform").includes("-50%"), false, "anchored to the right, not centred");
+  const rules = parseRules(css);
+  const logo = rules.find((r) => r.selector === ".story__logo" && r.context.length === 0);
+  assert.equal(logo.declarations.find((d) => d.prop === "height")?.value, "auto");
+  assert.ok(rules.filter((r) => r.selector.endsWith(".story__logo")).every((r) => r.declarations.every((d) => d.prop !== "position")));
+  const wide = rules.find((r) => r.selector === "html.js .story.is-motion .story__grid" && r.context.some((q) => q.includes("min-width: 1024px")));
+  assert.equal(wide.declarations.find((d) => d.prop === "grid-template-areas")?.value, '"copy screens"');
+});
+
+test("error: starting a logo chapter cannot import the retired canvas or request its models", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const script = await readFile(new URL("../assets/js/story.js", import.meta.url), "utf8");
+  assert.doesNotMatch(script, /story-canvas|dataset\.storyBase|getContext|new IntersectionObserver/);
 });
 
 test("edge: on a phone the stage's single column is the frame's width, so the headline wraps", async () => {
@@ -239,4 +244,11 @@ test("expected: between chapters the pictures dissolve while the words hand over
   // A neighbour shows its pictures and never its words.
   assert.match(script, /c\.style\.setProperty\("--t", "0"\);/);
   assert.match(script, /crossPresence\(g, i, n\)/);
+});
+
+test("the cinema stage has one decorative Forge word behind every sequence of chapters", () => {
+  for (const html of [lineStory(LINE), story("cs"), story("en")]) {
+    assert.equal((html.match(/<span class="story__brand" aria-hidden="true">Forge<\/span>/g) ?? []).length, 1);
+    assert.ok(html.indexOf('class="story__brand"') < html.indexOf('class="story__chapter"'));
+  }
 });

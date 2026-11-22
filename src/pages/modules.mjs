@@ -1,18 +1,12 @@
-/**
- * The modules page: its heading, the assembly scene (Forge alone, then its modules seating beside it), a jump list of
- * the five modules, the modules' scroll story (one addressable chapter per module, its film scene in 3D) and the closing
- * action.
- */
+/** The modules page pairs each product logo with its own chapter and real screens. */
 import { ctaBand } from "../components/cta-band.mjs";
 import { hero } from "../components/hero.mjs";
 import { moduleGrid } from "../components/module-card.mjs";
 import { moduleStory } from "../components/module-story.mjs";
-import { scrollScene } from "../components/scroll-scene.mjs";
+import { t } from "../lib/html.mjs";
 import { content } from "../content/index.mjs";
-import { assemblyCaptions } from "../content/scene.mjs";
 import { pathOf } from "../i18n/index.mjs";
 import { page } from "../layout.mjs";
-import { sceneManifest } from "../scenes.mjs";
 
 export function modulesPage() {
   const c = content();
@@ -21,8 +15,7 @@ export function modulesPage() {
     meta: c.modulesPage.meta,
     body: [
       hero({ ...c.modulesPage.hero, layout: "plain", action: c.action }),
-      scrollScene({ id: "skladani", scene: "assembly", name: c.assembly.eyebrow, label: c.assembly.label, captions: assemblyCaptions(c), manifest: sceneManifest("assembly") }),
-      `<div class="container module-index">${moduleGrid(c.modules, { onPage: true, label: c.modulesPage.indexLabel })}</div>`,
+      `<section class="container module-index" id="skladani" aria-label="${t(c.modulesPage.indexLabel)}">${moduleGrid(c.modules, { onPage: true })}</section>`,
       moduleStory(c.modules, { moreLabel: c.modulesPage.moreLabel }),
       ctaBand(c.modulesPage.closing),
     ].join("\n"),

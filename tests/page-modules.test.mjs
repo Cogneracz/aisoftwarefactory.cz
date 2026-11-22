@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { productMark } from "../src/components/product-mark.mjs";
 import { moduleStory } from "../src/components/module-story.mjs";
 import { MODULES, MODULES_PAGE } from "../src/content/modules.mjs";
 import { withLocale } from "../src/i18n/index.mjs";
@@ -13,24 +14,17 @@ test("expected: five addressable chapters of the story in the family's order", (
   assert.deepEqual(currentNav(html), ["Moduly"]);
 });
 
-test("expected: under the heading the assembly scene seats the modules beside Forge, before the index and the story", () => {
+test("expected: the original assembly bookmark now opens the accessible logo index before the story", () => {
   const body = main(html);
-  const order = ['class="hero hero--plain"', 'id="skladani"', "module-index", 'class="story"', 'id="bellows"', 'id="ukazka"'].map((part) => body.indexOf(part));
+  const order = ['class="hero hero--plain"', 'id="skladani"', 'class="story"', 'id="bellows"', 'id="ukazka"'].map((part) => body.indexOf(part));
   assert.ok(order.every((at) => at >= 0));
   assert.deepEqual([...order].sort((a, b) => a - b), order);
-  const scene = body.slice(body.indexOf('id="skladani"'), body.indexOf("module-index"));
-  // The page's h1 is the scene's heading: the scene has no heading block and is named for assistive technology.
-  assert.ok(body.includes('<section class="scene" id="skladani" aria-label="Moduly" data-scene="assembly">'));
-  assert.equal(scene.includes("scene__intro"), false);
-  assert.equal(/<h2/.test(scene), false);
-  assert.equal((scene.match(/class="scene__caption /g) ?? []).length, 6);
-  assert.ok(plain(scene).includes("Forge. Ze zadání udělá hotový, prověřený kód."));
-  assert.equal(scene.includes("scene-more"), false, "the scene on the modules page does not link the modules page");
-  // The modules' story: one chapter each, three steps and three screens, the 3D canvas loaded by its script.
-  assert.ok(body.includes('<div class="story" id="pribeh" data-story="bellows,anvil,temper,rivet,harness" data-story-base="/assets/media/story/">'));
+  assert.ok(body.includes(`<section class="container module-index" id="skladani" aria-label="${MODULES_PAGE.indexLabel}">`));
+  assert.doesNotMatch(body, /data-scene="assembly"|src="[^"]*\/scenes\/assembly\//);
+  assert.ok(body.includes('<div class="story" id="pribeh" data-story="bellows,anvil,temper,rivet,harness">'));
   assert.equal((body.match(/<li class="story__step/g) ?? []).length, 15);
   assert.equal((body.match(/<figure class="screen story__screen/g) ?? []).length, 15);
-  assert.equal(/data-film-large/.test(body.slice(body.indexOf('class="story"'))), false, "the story's 3D is the canvas, not the films");
+  assert.doesNotMatch(body, /data-film-large|data-story-base|class="story__object"/);
 });
 
 test("expected: the page presents modules as parts of Forge and each leads to its detail", () => {
@@ -42,8 +36,8 @@ test("expected: the page presents modules as parts of Forge and each leads to it
   const last = main(html).slice(main(html).lastIndexOf("<section"));
   assert.equal(primaryButtons(last).length, 1);
   for (const slug of ["bellows", "anvil", "temper", "rivet", "harness"]) {
-    assert.ok(html.includes(`class="object3d module-card__object" src="/assets/media/3d/${slug}.jpg"`), `${slug} object`);
-    assert.ok(html.includes(`<img class="object3d" src="/assets/media/3d/${slug}.jpg" alt="" aria-hidden="true"`), `${slug} still of the story`);
+    assert.ok(html.includes(productMark(slug, { className: "module-card__logo", tile: false })), `${slug} logo`);
+    assert.ok(html.includes(productMark(slug, { className: "story__logo", tile: false })), `${slug} chapter logo`);
   }
 });
 

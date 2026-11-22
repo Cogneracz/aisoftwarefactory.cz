@@ -28,5 +28,5 @@ test("edge: calm wording, root-relative addresses, and search engines skip it", 
 test("error: a relative address would break at depth and is reported", () => {
   const context = { path: "/404.html", origin: "https://aisoftwarefactory.cz", files: new Set(["/assets/site.css"]), idsOf: new Map([["/", new Set()]]), allowedHosts: ["cognera.cz"], noindex: true };
   assert.ok(pageProblems(html.replace('href="/forge/"', 'href="forge/"'), context).some((line) => /neither root-relative nor https: forge\//.test(line)));
-  assert.ok(pageProblems(html.replace('src="/assets/js/site.js"', 'src="assets/js/site.js"'), context).some((line) => /not root-relative: assets\/js\/site\.js|unexpected script/.test(line)));
+  assert.ok(pageProblems(html.replace('src="/assets/js/site.js', 'src="assets/js/site.js'), context).some((line) => /not root-relative: assets\/js\/site\.js|unexpected script/.test(line)));
 });

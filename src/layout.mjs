@@ -88,10 +88,10 @@ ${noindex ? "" : `<meta property="og:url" content="${esc(url)}">\n`}<meta proper
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 ${fonts}
-${head ? `${head}\n` : ""}<link rel="stylesheet" href="/assets/site.css">
+${head ? `${head}\n` : ""}<link rel="stylesheet" href="/assets/site.css?v=2">
 <script>(function(d){d.classList.add("js");setTimeout(function(){if(!window.__siteReady)d.classList.remove("js")},4000)})(document.documentElement)</script>
 <script>${HEAD_SCRIPT}</script>
-<script type="module" src="/assets/js/site.js"></script>
+<script type="module" src="/assets/js/site.js?v=2"></script>
 ${data}
 </head>
 <body>

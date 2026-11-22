@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { FAQ_MARKS, faq, faqJsonLd, partName, partPicture } from "../src/components/faq.mjs";
+import { FAQ_MARKS, faq, faqJsonLd, partName } from "../src/components/faq.mjs";
+import { productMark } from "../src/components/product-mark.mjs";
 import { stagePart } from "../assets/js/faq.js";
 import { CONTENT } from "../src/content/index.mjs";
 import { withLocale } from "../src/i18n/index.mjs";
@@ -57,9 +58,18 @@ test("expected: the stage shows one layer per part the answers are about, the fi
   const layers = [...html.matchAll(/<div class="faq__layer( is-current)?" data-mark="([a-z]+)">/g)].map((m) => [m[2], Boolean(m[1])]);
   assert.deepEqual(layers, [["factory", true], ["rivet", false], ["forge", false], ["anvil", false], ["temper", false], ["bellows", false]]);
   assert.ok(html.includes('<div class="faq__stage" aria-hidden="true">'));
-  // The stage's pictures are the line's still and the parts' renders, decorative; the giant word is the part's name.
-  assert.ok(html.includes('<img class="faq__object faq__object--line" src="/assets/media/film/factory-large-start.jpg" alt="" aria-hidden="true"'));
-  assert.ok(html.includes('<img class="faq__object" src="/assets/media/3d/anvil.jpg" alt="" aria-hidden="true"'));
+  // Each stage and narrow-screen answer uses the same official mark.
+  for (const { mark } of FAQ) {
+    const slug = mark === "factory" ? "forge" : mark;
+    const start = html.indexOf(`data-mark="${mark}">`);
+    const layer = html.slice(start, html.indexOf("</div>", start));
+    assert.ok(layer.includes(productMark(slug, { className: "faq__mark", tile: false })), mark);
+  }
+  for (const row of html.matchAll(/<details[^>]*data-mark="([^"]+)"[^>]*>([\s\S]*?)<\/details>/g)) {
+    const slug = row[1] === "factory" ? "forge" : row[1];
+    assert.ok(row[2].includes(productMark(slug, { className: "faq__thumb", tile: false })), slug);
+  }
+  assert.doesNotMatch(html, /<img\b|\/assets\/media\/(film|3d)\//);
   assert.ok(html.includes('<p class="faq__ghost" style="--fit: 1">Anvil</p>'));
   assert.ok(html.includes('<p class="faq__caption"><span>Rivet</span><span>Nasazení</span></p>'));
   // Each question names its part, so the script can show it.
@@ -85,7 +95,6 @@ test("edge: English names the parts in English; with every question closed the s
 test("error: a question without its part, or with a part the factory does not have, stops the build", () => {
   assert.throws(() => faq({ heading: "A", items: [...many(5), { q: "Bez dílu?", a: "x" }] }), /Question 6 \(Bez dílu\?\) needs the part it is about: undefined/);
   assert.throws(() => faq({ heading: "A", items: [...many(5), { mark: "kladivo", q: "Kladivo?", a: "x" }] }), /needs the part it is about: "kladivo"/);
-  assert.throws(() => partPicture("kladivo"), /Not a part of the factory: "kladivo"/);
   assert.throws(() => partName("kladivo"), /Not a part of the factory: "kladivo"/);
   assert.equal(stagePart(null, null, null), null);
 });

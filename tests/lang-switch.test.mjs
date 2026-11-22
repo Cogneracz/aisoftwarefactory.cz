@@ -137,11 +137,14 @@ test("edge: another page, the same page, no referrer and a switch without a plac
   top.fire("pageswap", { viewTransition: null });
 });
 
-test("expected: the story moves only where motion is welcome and WebGL works", () => {
+test("expected: the SVG story respects motion and data preferences without a graphics context", () => {
   const story = el();
   assert.equal(decideStoryMotion(fakeWindow(), story), true);
   assert.ok(story.has("is-motion"));
-  for (const options of [{ reducedMotion: true }, { saveData: true }, { webgl: false }]) {
+  const noGpu = fakeWindow({ webgl: false });
+  noGpu.document.createElement = () => { throw new Error("The logo story must not probe a graphics context"); };
+  assert.equal(decideStoryMotion(noGpu, el()), true);
+  for (const options of [{ reducedMotion: true }, { saveData: true }]) {
     const still = el();
     assert.equal(decideStoryMotion(fakeWindow(options), still), false, JSON.stringify(options));
     assert.equal(still.has("is-motion"), false);
@@ -156,9 +159,8 @@ test("expected: at the end of the page the story and the scenes are set for the 
     const screens = [0, 1, 2].map(() => el());
     return Object.assign(el({ parts: { ".story__step": steps, ".story__screen": screens } }), { steps, screens });
   });
-  const host = el();
   // The stage has travelled 5,050 of 9,000 px: chapter 3 (index 2), 0.8056 through it, its third step.
-  const story = el({ cls: ["story", "is-motion"], parts: { ".story__track": [el({ rect: { top: -5050, height: 9900 } })], ".story__stage": [el({ rect: { top: 0, height: 900 } })], ".story__object": [host], ".story__chapter": chapters } });
+  const story = el({ cls: ["story", "is-motion"], parts: { ".story__track": [el({ rect: { top: -5050, height: 9900 } })], ".story__stage": [el({ rect: { top: 0, height: 900 } })], ".story__chapter": chapters } });
   const captions = [0, 0.2, 0.5, 0.8].map((at) => el({ attrs: { "data-at": at } }));
   const segments = captions.map(() => el());
   const scene = el({ rect: { top: -1500, height: 4000 }, parts: { ".scene__stage": [el({ rect: { top: 0, height: 1000 } })], ".scene__caption": captions, ".scene__seg": segments } });
@@ -170,8 +172,9 @@ test("expected: at the end of the page the story and the scenes are set for the 
   assert.deepEqual(chapters[2].steps.map((s) => s.has("is-current")), [false, false, true]);
   assert.deepEqual(chapters[2].screens.map((s) => s.has("is-current")), [false, false, true]);
   assert.equal(chapters[2].vars.get("--l"), pos.local.toFixed(4));
-  assert.equal(host.vars.get("--p"), presence(pos.local, false, false).toFixed(4));
-  assert.equal(host.vars.get("--x"), handover(pos.local, false, false).toFixed(4));
+  assert.equal(chapters[2].vars.get("--p"), presence(pos.local, false, false).toFixed(4));
+  assert.equal(chapters[2].vars.get("--x"), handover(pos.local, false, false).toFixed(4));
+  assert.equal(story.querySelector(".story__stage").vars.get("--story-progress"), pinnedProgress(-5050, 9900, 0, 900).toFixed(4));
   // The scene is half way: its third caption (0.5) is the active one.
   assert.deepEqual(captions.map((c) => [c.has("is-past"), c.has("is-active"), c.has("is-next")].indexOf(true)), [0, 0, 1, 2]);
   assert.equal(captions[2].getAttribute("aria-current"), "step");
@@ -216,13 +219,13 @@ test("expected: every page carries the gate, the restore and its end mark; the t
   // The pictures drawn by scripts keep their old frame: named, and not animated.
   const named = parseRules(css).filter((r) => r.declarations.some((d) => d.prop === "view-transition-name"));
   const nameOf = (r) => r.declarations.find((d) => d.prop === "view-transition-name").value;
-  assert.deepEqual(named.slice(0, 3).map((r) => [r.selector, nameOf(r)]), [[".scene__canvas", "scene-picture"], [".story__object", "story-object"], [".scene__captions", "scene-captions"]]);
+  assert.deepEqual(named.slice(0, 2).map((r) => [r.selector, nameOf(r)]), [[".scene__canvas", "scene-picture"], [".scene__captions", "scene-captions"]]);
   // Under the open phone menu none of them is a group of its own.
-  assert.equal(named.length, 4);
-  assert.equal(nameOf(named[3]), "none");
-  assert.deepEqual(named[3].selector.split(", "), [".scene__canvas", ".scene__captions", ".story__object"].map((s) => `html.${UNDER_MENU} ${s}`));
+  assert.equal(named.length, 3);
+  assert.equal(nameOf(named[2]), "none");
+  assert.deepEqual(named[2].selector.split(", "), [".scene__canvas", ".scene__captions"].map((s) => `html.${UNDER_MENU} ${s}`));
   // What holds its old frame fades like the page when it has no counterpart on the other side.
-  const hold = parseRules(css).filter((r) => r.selector.includes("(scene-picture)") && r.selector.includes("(story-object)"));
+  const hold = parseRules(css).filter((r) => r.selector.includes("(scene-picture)"));
   assert.deepEqual(hold.map((r) => r.declarations.find((d) => d.prop === "animation").value), ["none", "fade var(--dur-move) var(--ease) both", "fade var(--dur-move) var(--ease) reverse both"]);
   assert.ok(hold.slice(1).every((r) => r.selector.split(", ").every((s) => s.endsWith(":only-child"))));
 });

@@ -1,8 +1,7 @@
 /**
  * The scroll story: one pinned stage in which the parts of the factory follow one another, one chapter each: the
- * part's name and decision, a short caption and each step's real screen. assets/js/story.js moves
- * the chapter's three layers at three speeds (copy, screen, 3D object) and, where motion is welcome and WebGL works,
- * loads the canvas (assets/js/story-canvas.js) that plays each part's film scene with the scroll.
+ * product mark, name and decision, a short caption and each step's real screen. assets/js/story.js
+ * moves the copy and the screens with the reader's scroll.
  *
  * Two stories are told with it. `moduleStory` on the modules page: Bellows, Anvil, Temper, Rivet and Cognera Harness,
  * three steps each. `lineStory` on the home page: the line's five steps with Forge in the middle, each under the
@@ -10,17 +9,15 @@
  *
  * Whether a story moves is decided by the inline script right after it (lib/lang-switch.mjs), at parse time, so its
  * layout is final before the first paint. As written here, with no script, reduced motion or save-data, every chapter
- * is a still block: the part's 3D render, its copy with all its steps, and its first screen. Each chapter keeps its
+ * is a still block: the product mark, its copy with all its steps, and its first screen. Each chapter keeps its
  * part's address (#bellows …), so an index on the page still jumps to it.
  */
 import { attrs, cls, need, t } from "../lib/html.mjs";
 import { content } from "../content/index.mjs";
 import { LINE_ORDER, LINE_STORY_STEPS } from "../content/line.mjs";
-import { STORY_MEDIA_BASE } from "../content/story.mjs";
 import { STORY_ID, STORY_SCRIPT } from "../lib/lang-switch.mjs";
 import { icon } from "./icons.mjs";
 import { inModuleOrder } from "./module-card.mjs";
-import { object3d } from "./object3d.mjs";
 import { productMark } from "./product-mark.mjs";
 import { arrowLabel } from "./rich.mjs";
 import { screenFrame } from "./screen-frame.mjs";
@@ -40,9 +37,8 @@ function chapter({ slug, name, headline, steps, more }, count, level) {
   const link = more ? `\n<a class="link link--out story__more" href="${t(more.href)}">${arrowLabel(more.label, icon("arrow-up-right", { size: 14 }))}</a>` : "";
   return `<section class="story__chapter" id="${slug}" aria-labelledby="${slug}-title">
 <div class="container story__grid">
-<div class="story__cover">${object3d(slug, { decorative: true })}</div>
 <div class="story__copy">
-<div class="story__identity">${productMark(slug)}<h${level} class="story__name" id="${slug}-title">${t(name)}</h${level}></div>
+<div class="story__identity">${productMark(slug, { className: "story__logo", tile: false })}<h${level} class="story__name" id="${slug}-title">${t(name)}</h${level}></div>
 <p class="story__headline">${t(need(headline, `The headline of ${name}`))}</p>
 <ol class="story__steps">${list}</ol>${link}
 </div>
@@ -60,10 +56,10 @@ function progress(chapters, label) {
 /** The pinned stage with its chapters. Three steps are the default the script and the styles assume; fewer are named. */
 function stage(chapters, { steps, level, label }) {
   const fewer = steps !== STORY_STEPS;
-  return `<div${attrs({ class: "story", id: STORY_ID, "data-story": chapters.map((c) => c.slug).join(","), "data-story-base": STORY_MEDIA_BASE, "data-story-steps": fewer ? steps : false })}>
+  return `<div${attrs({ class: "story", id: STORY_ID, "data-story": chapters.map((c) => c.slug).join(","), "data-story-steps": fewer ? steps : false })}>
 <div class="story__track" style="--chapters: ${chapters.length}${fewer ? `; --steps: ${steps}` : ""}">
 <div class="story__stage">
-<div class="container story__frame" aria-hidden="true"><div class="story__object"></div></div>
+<span class="story__brand" aria-hidden="true">Forge</span>
 ${progress(chapters, label)}
 ${chapters.map((c) => chapter(c, steps, level)).join("\n")}
 </div>

@@ -28,7 +28,7 @@
 <link rel="preload" href="/assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/manrope-latin-ext-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" href="/assets/media/film/forge-relay-poster.webp" fetchpriority="high">
-<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/site.css?v=2">
 <script>(function(d){d.classList.add("js");setTimeout(function(){if(!window.__siteReady)d.classList.remove("js")},4000)})(document.documentElement)</script>
 <script>(function gateTransition(win) {
 var doc = win.document;
@@ -64,7 +64,7 @@ if (event.viewTransition && !switched) event.viewTransition.skipTransition();
 });
 return switched;
 })(window)</script>
-<script type="module" src="/assets/js/site.js"></script>
+<script type="module" src="/assets/js/site.js?v=2"></script>
 
 </head>
 <body>
@@ -85,7 +85,6 @@ return switched;
 <div class="hero__copy"><p class="hero__eyebrow" style="--i:0"><svg class="mark" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><rect x="4" y="4" width="504" height="504" rx="112" fill="#ffffff" stroke="rgba(0,0,0,0.1)" stroke-width="8"/><g transform="translate(286 226)"><rect x="-120" y="-120" width="240" height="240" rx="30" transform="rotate(45) translate(0 50)" fill="#9a3412"/><rect x="-100" y="-100" width="200" height="200" rx="25" transform="rotate(45)" fill="#ea580c"/><rect x="-78" y="-78" width="156" height="156" rx="20" transform="rotate(45) translate(0 -50)" fill="#f59e0b"/></g></svg><span>Forge</span><span class="tag">Jádro</span></p><h1 class="hero__title" style="--i:0"><span class="hero__line">Schválíte plán.</span> <span class="hero__line">Forge napíše kód.</span></h1><p class="hero__lead" style="--i:1.4">Projdete si změny i&nbsp;výsledky testů a&nbsp;rozhodnete, co sloučit.</p><div class="hero__actions" style="--i:2.4"><a class="button button--primary button--lg" href="https://cognera.cz/#contact-form"><span>Domluvit ukázku</span><svg class="icon button__icon" viewBox="0 0 256 256" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg></a></div></div>
 <div class="hero__media"><video id="film" class="promo__player" data-hero-promo controls playsinline preload="none" width="1920" height="1080" poster="/assets/media/film/forge-relay-poster.webp" aria-label="Forge v jedné minutě.">
 <source src="/assets/media/film/forge-relay.mp4" type="video/mp4">
-<track kind="subtitles" srclang="cs" label="Čeština" src="/assets/media/film/forge-relay-cs.vtt" default>
 <track kind="captions" srclang="en" label="English" src="/assets/media/film/forge-relay-en.vtt">
 <a href="/assets/media/film/forge-relay.mp4" download>Stáhnout film</a>
 </video></div>
@@ -222,13 +221,14 @@ var story = doc.querySelector(".story.is-motion");
 if (story) {
 var track = story.querySelector(".story__track");
 var stage = story.querySelector(".story__stage");
-var host = story.querySelector(".story__object");
 var chapters = story.querySelectorAll(".story__chapter");
 if (track && stage && chapters.length) {
 var t = track.getBoundingClientRect();
 var g = stage.getBoundingClientRect();
 var n = chapters.length;
-var pos = lib.storyPosition(lib.pinnedProgress(t.top, t.height, g.top, g.height), n, Number(story.getAttribute("data-story-steps")) || 3);
+var progress = lib.pinnedProgress(t.top, t.height, g.top, g.height);
+stage.style.setProperty("--story-progress", progress.toFixed(4));
+var pos = lib.storyPosition(progress, n, Number(story.getAttribute("data-story-steps")) || 3);
 var first = pos.chapter === 0;
 var last = pos.chapter === n - 1;
 var vars = [
@@ -252,7 +252,6 @@ screens[j].classList.toggle("is-past", j < pos.beat);
 }
 for (var v = 0; v < vars.length; v++) {
 chapter.style.setProperty(vars[v][0], vars[v][1]);
-if (host) host.style.setProperty(vars[v][0], vars[v][1]);
 }
 }
 }

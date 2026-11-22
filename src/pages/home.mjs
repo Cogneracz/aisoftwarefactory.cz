@@ -1,8 +1,8 @@
 /**
- * The landing page: the factory's film, the line's story (five steps, five decisions: one pinned 3D
+ * The landing page: the factory's film, the line's story (five steps, five decisions: one pinned
  * stage, each step under the decision a person makes there, with the real screens that show it), proof (the systems
  * built in the factory), questions, closing action. The modules are the story's chapters here; their own page opens with
- * the assembly scene.
+ * links to the five modules.
  */
 import { ctaBand } from "../components/cta-band.mjs";
 import { faq, faqJsonLd } from "../components/faq.mjs";

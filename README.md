@@ -30,13 +30,13 @@ A change is ready when `npm test` passes; one of its tests is the `--check` abov
 | `src/styles/` | `tokens.css` (every visual value), `base.css`, then one file per component |
 | `src/layout.mjs` | The document shell: head, navigation, main, footer |
 | `assets/js/` | Progressive enhancement only; every page reads and works without scripts. `scenes/` holds the scroll scenes' frame manifests |
-| `assets/media/scenes/` | The scroll scenes' frames: the assembly (the modules page), and the line in Czech and English (91 MB; a visitor loads 3 to 4 MB of one scene). No page uses the line's frames any more: the home page tells the line as a live story |
-| `assets/media/film/`, `assets/media/3d/` | The Forge promo, caption files, 3D films and object renders. The home and Forge pages play the promo muted in the hero. Visitors with reduced motion or Data Saver can start it with the player controls. |
+| `assets/media/scenes/` | Archived frames for the original assembly and production line scenes. The live pages introduce modules with inline SVG logos and real product screens. |
+| `assets/media/film/`, `assets/media/3d/` | The Forge promo, its English captions, 3D films and object renders. The home and Forge pages play the promo muted in the hero. Visitors with reduced motion or Data Saver can start it with the player controls. |
 | `assets/media/screens/` | Real product screens on demo data; `forge-plan` is a crop of `forge-step-b` without the task's status bar |
 | `assets/media/references/` | The pictures of the systems built in the factory (the home page's proof section): the same files cognera.cz serves for its case studies |
 | `assets/js/story.js`, `assets/js/story-math.js` | The scroll story: the pinned stage, the spring, the layers. Told twice by `src/components/module-story.mjs`: the modules on `/moduly/` (three steps a chapter) and the line's five steps with Forge on the home page (two steps a chapter) |
 | `assets/js/stack.js` | The deck of systems on the home page: measures how far each card is covered and how far it is from its place; the styles do the rest |
-| `assets/js/story-canvas.js`, `assets/media/story/` | Generated: the story's 3D canvas (three.js, React Three Fiber, React; 366 kB gzip, loaded only when the story is a screen away) and its models and textures. Do not edit; it is rebuilt from the scenes' source outside this repository |
+| `assets/js/story-canvas.js`, `assets/media/story/` | Archived WebGL scene and its models. The logo presentation uses CSS and the existing scroll controller. |
 | `assets/js/lang.js`, `src/lib/lang-switch.mjs`, `src/styles/lang-transition.css` | Switching language: the link carries the visitor's place, the other page restores it before its first paint, and where the browser can the two pages cross-fade. `lang-switch.mjs` holds the three scripts written into every page (the head, after the story, the end of the body) |
 | `tests/` | `node --test`; `tests/lib/` holds the checkers |
 | `index.html`, `forge/`, `moduly/`, `provozovatel/`, `en/`, `404.html`, `assets/site.css`, `sitemap.xml`, `robots.txt`, `favicon.svg` | Generated |
@@ -52,8 +52,7 @@ A change is ready when `npm test` passes; one of its tests is the `--check` abov
 - **The look.** The page is the studio plate of the renders and screens (`--bg`), so films and 3D objects stand on it
   without a frame; the ember accent (`--accent`) marks the current chapter in the navigation.
 - **Nothing from another origin.** No cookies, no analytics, no third-party request. The page `/provozovatel/` says
-  so, and the tests keep it true. Two scripts fetch, only from this site: the scroll scenes' frames and the story
-  canvas's models and textures. XML namespace names in the canvas (SVG, MathML) are identifiers, never requested.
+  so, and the tests keep it true. Product screens and media are served from this site. SVG namespace names are identifiers.
 - **Two languages, one shape.** English content has exactly the keys, lists and pictures of the Czech content; every
   page names its language versions (`hreflang`) and the bar leads to the same page in the other language.
 - **The switch keeps the place.** The language link carries the number of the section on screen and the share of it

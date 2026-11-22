@@ -80,7 +80,7 @@ test("error: a third-party resource, a relative address, a dead anchor and an un
   const home = html.get("/");
   const cases = [
     [home.replace("</head>", '<script src="https://cdn.example.com/track.js"></script></head>'), /not root-relative: https:\/\/cdn\.example\.com|unexpected script/],
-    [home.replace('href="/assets/site.css"', 'href="assets/site.css"'), /not root-relative: assets\/site\.css/],
+    [home.replace('href="/assets/site.css', 'href="assets/site.css'), /not root-relative: assets\/site\.css/],
     [home.replace('href="/moduly/#bellows"', 'href="/moduly/#nic"'), /anchor that does not exist: \/moduly\/#nic/],
     [home.replace('href="/forge/"', 'href="forge/"'), /neither root-relative nor https: forge\//],
     [home.replace('href="/forge/"', 'href="/kontakt/"'), /page that does not exist: \/kontakt\//],

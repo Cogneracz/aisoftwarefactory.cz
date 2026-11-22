@@ -9,13 +9,8 @@
 
 .story__grid {
   display: grid;
-  grid-template-areas: "cover" "copy" "screens";
+  grid-template-areas: "copy" "screens";
   gap: var(--spacing-400);
-}
-
-.story__cover {
-  grid-area: cover;
-  max-width: 360px;
 }
 
 .story__copy {
@@ -45,9 +40,11 @@
   gap: var(--spacing-100);
 }
 
-.story__identity .mark {
-  width: 40px;
-  height: 40px;
+.story__logo {
+  display: block;
+  width: var(--spacing-700);
+  height: auto;
+  flex: none;
 }
 
 .story__name {
@@ -87,10 +84,6 @@
   display: none;
 }
 
-.story__frame {
-  display: none;
-}
-
 @media (min-width: 768px) {
   .story__headline {
     font: var(--display-5);
@@ -104,7 +97,7 @@
 
   .story__grid {
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    grid-template-areas: "cover screens" "copy screens";
+    grid-template-areas: "copy screens";
     column-gap: var(--spacing-700);
     align-items: start;
   }
@@ -120,10 +113,6 @@ html.js .story.is-motion .story__stage {
   top: var(--spacing-800);
   height: calc(100svh - var(--spacing-800));
   overflow: hidden;
-}
-
-html.js .story.is-motion .story__cover {
-  display: none;
 }
 
 html.js .story.is-motion .story__chapter {
@@ -166,11 +155,6 @@ html.js .story.is-motion .story__copy {
   transform: translate3d(calc(var(--x, 0) * var(--spacing-600)), calc((0.5 - var(--l, 0.5)) * var(--spacing-400)), 0);
 }
 
-html.js .story.is-motion .story__identity .mark {
-  width: 32px;
-  height: 32px;
-}
-
 html.js .story.is-motion .story__name {
   font: var(--heading-5);
 }
@@ -207,8 +191,10 @@ html.js .story.is-motion .story__more {
 html.js .story.is-motion .story__screens {
   position: relative;
   z-index: 1;
-  justify-self: end;
-  width: 84%;
+  justify-self: center;
+  align-self: center;
+  width: min(100%, 75svh);
+  max-height: 100%;
   aspect-ratio: 16 / 10;
   border-radius: var(--radius-2xl);
   opacity: var(--p, 0);
@@ -247,29 +233,6 @@ html.js .story.is-motion .story__screen.is-past {
   z-index: 3;
   opacity: 0;
   transform: translate3d(-26%, 6%, 0) rotate(-3deg) scale(0.96);
-}
-
-html.js .story.is-motion .story__frame {
-  display: block;
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-}
-
-html.js .story.is-motion .story__object {
-  position: absolute;
-  left: 50%;
-  bottom: var(--spacing-800);
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  opacity: var(--p, 0);
-  transform: translate3d(calc(-50% + var(--x, 0) * var(--spacing-900) * 2), calc((0.5 - var(--l, 0.5)) * var(--spacing-900)), 0);
-  will-change: transform, opacity;
-}
-
-.story__object canvas {
-  display: block;
 }
 
 html.js .story.is-motion .story__progress {
@@ -334,12 +297,7 @@ html.js .story.is-motion .story__mark:hover {
 
 @media (min-width: 768px) {
   html.js .story.is-motion .story__screens {
-    width: 62%;
-  }
-
-  html.js .story.is-motion .story__object {
-    width: 86%;
-    transform: translate3d(calc(-50% + var(--x, 0) * var(--spacing-900) * 2), calc((0.5 - var(--l, 0.5)) * var(--spacing-900)), 0);
+    width: min(82%, 75svh);
   }
 
   html.js .story.is-motion .story__progress {
@@ -355,7 +313,7 @@ html.js .story.is-motion .story__mark:hover {
   }
 
   html.js .story.is-motion .story__grid {
-    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     grid-template-areas: "copy screens";
     grid-template-rows: minmax(0, 1fr);
     column-gap: var(--spacing-400);
@@ -365,6 +323,16 @@ html.js .story.is-motion .story__mark:hover {
   html.js .story.is-motion .story__copy {
     align-self: center;
     padding-bottom: var(--spacing-400);
+  }
+
+  .story__identity {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--spacing-100);
+  }
+
+  .story__logo {
+    width: clamp(72px, 9vw, 128px);
   }
 
   html.js .story.is-motion .story__name {
@@ -380,18 +348,8 @@ html.js .story.is-motion .story__mark:hover {
   }
 
   html.js .story.is-motion .story__screens {
-    margin-top: var(--spacing-300);
-    align-self: start;
-    width: 86%;
+    width: min(100%, 88svh);
     border-radius: var(--radius-3xl);
-  }
-
-  html.js .story.is-motion .story__object {
-    left: auto;
-    right: 0;
-    bottom: 11%;
-    width: 47%;
-    transform: translate3d(calc(var(--x, 0) * var(--spacing-900) * 2), calc((0.5 - var(--l, 0.5)) * var(--spacing-900)), 0);
   }
 }
 
@@ -410,11 +368,6 @@ html.js .story.is-motion .story__mark:hover {
     padding-bottom: var(--spacing-100);
   }
 
-  html.js .story.is-motion .story__identity .mark {
-    width: 28px;
-    height: 28px;
-  }
-
   html.js .story.is-motion .story__name {
     font: var(--heading-6);
   }
@@ -425,15 +378,6 @@ html.js .story.is-motion .story__mark:hover {
 
   html.js .story.is-motion .story__steps {
     margin-top: var(--spacing-200);
-  }
-
-  html.js .story.is-motion .story__screens {
-    width: 80%;
-  }
-
-  html.js .story.is-motion .story__object {
-    bottom: 8%;
-    width: 44%;
   }
 
   html.js .story.is-motion .story__progress {
@@ -451,42 +395,78 @@ html.js .story.is-motion .story__mark:hover {
     height: auto;
     overflow: visible;
   }
+}
 
-  html.js .story.is-motion .story__frame {
-    display: none;
+/* Reserve the persistent navigation's space on short phones. The screenshot keeps its native proportions. */
+@media (max-width: 767px) and (max-height: 700px) and (orientation: portrait) {
+  html.js .story.is-motion .story__grid {
+    gap: var(--spacing-100);
+  }
+
+  html.js .story.is-motion .story__logo {
+    width: var(--spacing-600);
+  }
+
+  html.js .story.is-motion .story__headline {
+    font: var(--heading-5);
+  }
+
+  html.js .story.is-motion .story__screens {
+    width: min(100%, 46svh);
+    margin-bottom: var(--spacing-200);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 480px), (max-width: 767px) and (max-height: 700px) and (orientation: portrait) {
+  html.js .story.is-motion .story__copy,
+  html.js .story.is-motion .story__screens {
+    transform: none;
   }
 }
 
 @media (orientation: landscape) and (max-height: 480px) {
   html.js .story.is-motion .story__chapter {
-    padding-block: var(--spacing-100) var(--spacing-700);
+    padding-block: var(--spacing-100) var(--spacing-800);
+  }
+
+  html.js .story.is-motion .story__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--spacing-200);
   }
 
   html.js .story.is-motion .story__copy {
     padding-bottom: var(--spacing-0);
   }
 
-  html.js .story.is-motion .story__identity .mark {
-    width: 24px;
-    height: 24px;
-  }
-
   html.js .story.is-motion .story__headline {
     margin-top: var(--spacing-75);
-    font: var(--display-6);
+    font: var(--heading-6);
+  }
+
+  html.js .story.is-motion .story__name {
+    font: var(--heading-6);
+  }
+
+  html.js .story.is-motion .story__more {
+    margin: 0;
+    font: var(--body-4);
   }
 
   html.js .story.is-motion .story__steps {
-    margin-top: var(--spacing-100);
+    margin-top: var(--spacing-50);
+  }
+
+  .story__identity {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .story__logo {
+    width: var(--spacing-400);
   }
 
   html.js .story.is-motion .story__screens {
-    width: 80%;
-  }
-
-  html.js .story.is-motion .story__object {
-    bottom: 16%;
-    width: 36%;
+    width: min(100%, calc((100svh - 2 * var(--spacing-800) - var(--spacing-100)) * 1.6));
   }
 
   html.js .story.is-motion .story__progress {

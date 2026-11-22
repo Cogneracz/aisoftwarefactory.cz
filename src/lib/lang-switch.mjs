@@ -59,12 +59,6 @@ export function decideStoryMotion(win, story) {
   if (!story || !story.classList) return false;
   var nav = win.navigator || {};
   if (win.matchMedia("(prefers-reduced-motion: reduce)").matches || (nav.connection && nav.connection.saveData === true)) return false;
-  try {
-    var canvas = win.document.createElement("canvas");
-    if (!(canvas.getContext("webgl2") || canvas.getContext("webgl"))) return false;
-  } catch (e) {
-    return false;
-  }
   story.classList.add("is-motion");
   return true;
 }
@@ -88,13 +82,14 @@ export function primeStages(win, lib) {
   if (story) {
     var track = story.querySelector(".story__track");
     var stage = story.querySelector(".story__stage");
-    var host = story.querySelector(".story__object");
     var chapters = story.querySelectorAll(".story__chapter");
     if (track && stage && chapters.length) {
       var t = track.getBoundingClientRect();
       var g = stage.getBoundingClientRect();
       var n = chapters.length;
-      var pos = lib.storyPosition(lib.pinnedProgress(t.top, t.height, g.top, g.height), n, Number(story.getAttribute("data-story-steps")) || 3);
+      var progress = lib.pinnedProgress(t.top, t.height, g.top, g.height);
+      stage.style.setProperty("--story-progress", progress.toFixed(4));
+      var pos = lib.storyPosition(progress, n, Number(story.getAttribute("data-story-steps")) || 3);
       var first = pos.chapter === 0;
       var last = pos.chapter === n - 1;
       var vars = [
@@ -118,7 +113,6 @@ export function primeStages(win, lib) {
       }
       for (var v = 0; v < vars.length; v++) {
         chapter.style.setProperty(vars[v][0], vars[v][1]);
-        if (host) host.style.setProperty(vars[v][0], vars[v][1]);
       }
     }
   }
