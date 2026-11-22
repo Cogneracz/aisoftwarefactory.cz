@@ -10,6 +10,7 @@ import { access, mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { productMark } from "./src/components/product-mark.mjs";
+import { PROMO } from "./src/content/promo.mjs";
 import { media3dFiles } from "./src/content/media3d.mjs";
 import { SCREEN_DIR, screenFiles } from "./src/content/screens.mjs";
 import { referenceFiles } from "./src/content/references.mjs";
@@ -72,7 +73,7 @@ export function mediaFiles() {
     ...Object.values(manifest.sets).flatMap((set) => set.frames.flatMap((frame) => [`${set.base}/${pad(frame)}.avif`, `${set.base}/${pad(frame)}.webp`])),
     ...manifest.captionFrames.flatMap((_, k) => ["large", "small"].flatMap((cut) => [`${manifest.stills}/${cut}-${k + 1}.avif`, `${manifest.stills}/${cut}-${k + 1}.webp`])),
   ]);
-  return [...screenFiles().map((file) => `${SCREEN_DIR}/${file}`), ...media3dFiles(), ...scenes, ...Object.values(SHARE_IMAGE), ...STORY_MEDIA, ...STORY_SCRIPTS, ...referenceFiles()];
+  return [...screenFiles().map((file) => `${SCREEN_DIR}/${file}`), ...media3dFiles(), ...Object.values(PROMO), ...scenes, ...Object.values(SHARE_IMAGE), ...STORY_MEDIA, ...STORY_SCRIPTS, ...referenceFiles()];
 }
 
 /** Every generated file as [path relative to the root, content]. Throws when a page names a missing picture. */

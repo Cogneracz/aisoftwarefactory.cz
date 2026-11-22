@@ -227,3 +227,14 @@ html.is-lang-arrival :is(.hero__copy > *, .hero__media) {
     animation: none;
   }
 }
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-100);
+}
+
+.hero--stacked .hero__actions {
+  justify-content: center;
+}

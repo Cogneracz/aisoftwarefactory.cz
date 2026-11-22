@@ -13,6 +13,7 @@ export const HOME = {
     proof: "Forge vznikl v Cogneře a sami s ním pracujeme.",
     film: "factory",
   },
+  promo: { heading: "Forge v jedné minutě.", watch: "Přehrát film", download: "Stáhnout film" },
   tagline: ["Agenti odvedou rutinu.", "Seniorní vývojáři hlídají architekturu.", "Kde je potřeba rozhodnout, továrna počká na člověka."],
   proof: {
     eyebrow: "V Cogneře",

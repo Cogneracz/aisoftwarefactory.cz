@@ -988,6 +988,19 @@ a {
   background: var(--surface);
 }
 
+.promo {
+  scroll-margin-top: var(--spacing-700);
+}
+
+.promo__player {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+}
+
 /* hero.css */
 /* The opening of a page. Its heading is the page's largest statement: heavy, tight, the first line in ink and the
    following lines a shade back. The stacked hero (the home page) is centred above its film, which runs the full width
@@ -1217,6 +1230,17 @@ html.is-lang-arrival :is(.hero__copy > *, .hero__media) {
   .hero__media {
     animation: none;
   }
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-100);
+}
+
+.hero--stacked .hero__actions {
+  justify-content: center;
 }
 
 /* tagline-reveal.css */

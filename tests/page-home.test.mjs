@@ -17,12 +17,12 @@ test("expected: the first screen states the offer, one action, one proof and the
 });
 
 test("expected: the sections follow the argument, each under its own heading", () => {
-  assert.deepEqual(sectionIds(html), ["linka", "bellows", "anvil", "forge", "temper", "rivet", "harness", "cognera", "otazky", "ukazka"]);
+  assert.deepEqual(sectionIds(html), ["film", "linka", "bellows", "anvil", "forge", "temper", "rivet", "harness", "cognera", "otazky", "ukazka"]);
   const body = main(html);
-  const order = ['class="hero hero--stacked"', 'class="tagline"', 'id="linka"', 'class="story"', 'id="cognera"', 'id="otazky"', 'id="ukazka"'].map((part) => body.indexOf(part));
+  const order = ['class="hero hero--stacked"', 'class="tagline"', 'id="film"', 'id="linka"', 'class="story"', 'id="cognera"', 'id="otazky"', 'id="ukazka"'].map((part) => body.indexOf(part));
   assert.ok(order.every((at) => at >= 0));
   assert.deepEqual([...order].sort((a, b) => a - b), order);
-  assert.deepEqual(h2s(html), ["Pět kroků. Pět rozhodnutí.", "Továrna, ve které sami pracujeme.", "Časté otázky", "Ukažte nám svůj backlog."]);
+  assert.deepEqual(h2s(html), ["Forge v jedné minutě.", "Pět kroků. Pět rozhodnutí.", "Továrna, ve které sami pracujeme.", "Časté otázky", "Ukažte nám svůj backlog."]);
   assert.equal((html.match(/<h1[\s>]/g) ?? []).length, 1);
 });
 

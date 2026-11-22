@@ -29,6 +29,7 @@ export const HOME_EN = {
     proof: "Forge was made at Cognera, and we use it in our own work.",
     film: "factory",
   },
+  promo: { heading: "Forge in one minute.", watch: "Watch the film", download: "Download the film" },
   tagline: ["Agents handle the routine work.", "Senior engineers watch over the architecture.", "Where a decision is needed, the factory waits for a person."],
   proof: {
     eyebrow: "At Cognera",

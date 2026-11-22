@@ -8,6 +8,7 @@ import { ctaBand } from "../components/cta-band.mjs";
 import { faq, faqJsonLd } from "../components/faq.mjs";
 import { filmPreload } from "../components/film.mjs";
 import { hero } from "../components/hero.mjs";
+import { promoPlayer } from "../components/promo-player.mjs";
 import { lineStory } from "../components/module-story.mjs";
 import { sectionHead } from "../components/rich.mjs";
 import { taglineReveal } from "../components/tagline-reveal.mjs";
@@ -34,8 +35,9 @@ export function homePage() {
     head: filmPreload(c.home.hero.film),
     jsonLd: [websiteJsonLd(), organizationJsonLd(), faqJsonLd(c.faq)],
     body: [
-      hero({ ...c.home.hero, layout: "stacked", action: c.action }),
+      hero({ ...c.home.hero, layout: "stacked", action: c.action, watch: { label: c.home.promo.watch, href: "#film" } }),
       taglineReveal({ sentences: c.home.tagline }),
+      promoPlayer(c.home.promo),
       lineSection({ line: c.line }),
       referenceShowcase({ id: "cognera", ...c.home.proof, references: c.references }),
       faq({ id: "otazky", heading: c.home.faqHeading, items: c.faq }),

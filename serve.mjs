@@ -28,6 +28,7 @@ export const TYPES = {
   ".webp": "image/webp",
   ".avif": "image/avif",
   ".mp4": "video/mp4",
+  ".vtt": "text/vtt; charset=utf-8",
   ".woff2": "font/woff2",
 };
 

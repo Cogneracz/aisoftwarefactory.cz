@@ -12,7 +12,7 @@ import { screenFrame } from "./screen-frame.mjs";
 
 const LAYOUTS = ["split", "stacked", "plain"];
 
-export function hero({ layout = "split", eyebrow, mark, tag, title, lead, action, proof, screen, film }) {
+export function hero({ layout = "split", eyebrow, mark, tag, title, lead, action, watch, proof, screen, film }) {
   if (!LAYOUTS.includes(layout)) throw new Error(`Unknown hero layout: ${JSON.stringify(layout)}`);
   if (!Array.isArray(title) || title.length === 0 || title.some((line) => typeof line !== "string" || line.trim() === "")) throw new Error("A hero needs a title of one or more lines");
   if (layout !== "plain" && !action) throw new Error("A hero with a picture needs its action");
@@ -31,7 +31,7 @@ export function hero({ layout = "split", eyebrow, mark, tag, title, lead, action
   }
   parts.push(`<h1 class="hero__title" ${step()}>${title.map((line) => `<span class="hero__line">${t(line)}</span>`).join(" ")}</h1>`);
   if (lead) parts.push(`<p class="hero__lead" ${step()}>${rich(lead)}</p>`);
-  if (action) parts.push(`<div class="hero__actions" ${step()}>${button(action, { variant: action.variant ?? "primary", size: "lg" })}</div>`);
+  if (action) parts.push(`<div class="hero__actions" ${step()}>${button(action, { variant: action.variant ?? "primary", size: "lg" })}${watch ? button(watch, { variant: "secondary", size: "lg", arrow: false }) : ""}</div>`);
   if (proof) parts.push(`<p class="hero__proof" ${step()}>${icon("check", { size: 16 })}<span>${t(proof)}</span></p>`);
 
   return `<section class="${cls("hero", `hero--${layout}`)}">

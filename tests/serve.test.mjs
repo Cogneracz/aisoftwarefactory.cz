@@ -5,6 +5,7 @@ import { TYPES, byteRange, resolvePath } from "../serve.mjs";
 test("expected: the preview server knows the site's file types and maps paths into the root", () => {
   assert.equal(TYPES[".avif"], "image/avif");
   assert.equal(TYPES[".mp4"], "video/mp4");
+  assert.equal(TYPES[".vtt"], "text/vtt; charset=utf-8");
   assert.equal(TYPES[".woff2"], "font/woff2");
   assert.equal(resolvePath("/site", "/forge/"), "/site/forge/");
   assert.equal(resolvePath("/site", "/assets/site.css?v=2#x"), "/site/assets/site.css");

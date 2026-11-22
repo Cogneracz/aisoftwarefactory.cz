@@ -17,7 +17,14 @@ export function resourceUrls(html) {
   for (const tag of tags(html, "link")) if (!["canonical", "alternate"].includes(attr(tag, "rel"))) out.push(attr(tag, "href"));
   for (const tag of tags(html, "script")) if (attr(tag, "src") !== undefined) out.push(attr(tag, "src"));
   for (const tag of tags(html, "img")) out.push(attr(tag, "src"));
-  for (const tag of tags(html, "source")) for (const part of (attr(tag, "srcset") ?? "").split(",")) out.push(part.trim().split(/\s+/)[0]);
+  for (const tag of tags(html, "video")) out.push(attr(tag, "src"), attr(tag, "poster"));
+  for (const tag of tags(html, "track")) out.push(attr(tag, "src") ?? "");
+  for (const tag of tags(html, "source")) {
+    const srcset = attr(tag, "srcset");
+    if (srcset !== undefined) for (const part of srcset.split(",")) out.push(part.trim().split(/\s+/)[0]);
+    const src = attr(tag, "src");
+    if (src !== undefined || srcset === undefined) out.push(src ?? "");
+  }
   for (const tag of tags(html, "figure")) for (const name of ["data-film-large", "data-film-small"]) out.push(attr(tag, name));
   return out.filter((url) => url !== undefined);
 }
@@ -61,7 +68,9 @@ export function pageProblems(html, { path, origin, files, idsOf, allowedHosts, n
       if (!ids(html).has(href.slice(1))) say(`an anchor without a target: ${href}`);
     } else if (/^\/(?!\/)/.test(href)) {
       const [target, hash] = href.split("#");
-      if (!idsOf.has(target)) say(`a link to a page that does not exist: ${href}`);
+      if (/\sdownload(?:\s|=|>)/.test(tag)) {
+        if (!files.has(target)) say(`a download is missing on disk: ${target}`);
+      } else if (!idsOf.has(target)) say(`a link to a page that does not exist: ${href}`);
       else if (hash !== undefined && !idsOf.get(target).has(hash)) say(`a link to an anchor that does not exist: ${href}`);
     } else if (href.startsWith("https://")) {
       if (!allowedHosts.includes(new URL(href).hostname)) say(`a link to a host that is not allowed: ${href}`);

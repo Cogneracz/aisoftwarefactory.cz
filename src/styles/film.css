@@ -42,3 +42,16 @@
   width: 100%;
   background: var(--surface);
 }
+
+.promo {
+  scroll-margin-top: var(--spacing-700);
+}
+
+.promo__player {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+}
