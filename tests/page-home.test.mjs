@@ -6,23 +6,23 @@ import { built, h1, h2s, hrefs, jsonLd, main, plain, primaryButtons, sectionIds 
 
 const html = built("/");
 
-test("expected: the first screen states the offer, one action, one proof and the factory's 3D film", () => {
-  assert.equal(h1(html), "AI továrna na software, ve které rozhodujete vy.");
+test("expected: the first screen states the offer and shows the full Forge film", () => {
+  assert.equal(h1(html), "Od nápadu k fungující aplikaci.");
   const hero = main(html).slice(0, main(html).indexOf("</section>"));
-  assert.ok(plain(hero).includes("Forge dovede zadání k hotovému, prověřenému kódu."));
+  assert.ok(plain(hero).includes("Forge rozdělí zadání na úkoly."));
   assert.equal(primaryButtons(hero).length, 1);
-  assert.ok(plain(hero).includes("Forge vznikl v Cogneře a sami s ním pracujeme."));
-  assert.ok(hero.includes('data-film-large="/assets/media/film/factory-large.mp4"') && hero.includes("/assets/media/film/factory-large-start.jpg"));
-  assert.ok(html.includes('<link rel="preload" as="image" href="/assets/media/film/factory-large-start.jpg" media="(min-width: 768px)" fetchpriority="high">'));
+  assert.ok(hero.includes('src="/assets/media/film/forge-relay.mp4"'));
+  assert.ok(html.includes('<link rel="preload" as="image" href="/assets/media/film/forge-relay-poster.webp" fetchpriority="high">'));
+  assert.doesNotMatch(hero, /data-film-large|hero__proof|<h2/);
 });
 
 test("expected: the sections follow the argument, each under its own heading", () => {
-  assert.deepEqual(sectionIds(html), ["film", "linka", "bellows", "anvil", "forge", "temper", "rivet", "harness", "cognera", "otazky", "ukazka"]);
+  assert.deepEqual(sectionIds(html), ["linka", "bellows", "anvil", "forge", "temper", "rivet", "harness", "cognera", "otazky", "ukazka"]);
   const body = main(html);
-  const order = ['class="hero hero--stacked"', 'class="tagline"', 'id="film"', 'id="linka"', 'class="story"', 'id="cognera"', 'id="otazky"', 'id="ukazka"'].map((part) => body.indexOf(part));
+  const order = ['class="hero hero--split hero--promo"', 'id="film"', 'id="linka"', 'class="story"', 'id="cognera"', 'id="otazky"', 'id="ukazka"'].map((part) => body.indexOf(part));
   assert.ok(order.every((at) => at >= 0));
   assert.deepEqual([...order].sort((a, b) => a - b), order);
-  assert.deepEqual(h2s(html), ["Forge v jedné minutě.", "Pět kroků. Pět rozhodnutí.", "Továrna, ve které sami pracujeme.", "Časté otázky", "Ukažte nám svůj backlog."]);
+  assert.deepEqual(h2s(html), ["Pět kroků. Pět rozhodnutí.", "Továrna, ve které sami pracujeme.", "Časté otázky", "Ukažte nám svůj backlog."]);
   assert.equal((html.match(/<h1[\s>]/g) ?? []).length, 1);
 });
 
@@ -34,13 +34,13 @@ test("expected: the line is one story of five chapters and its base, each under 
   assert.deepEqual([...line.matchAll(/<h3 class="story__name" id="[a-z]+-title">([^<]+)/g)].map((m) => m[1]), ["Bellows", "Anvil", "Forge", "Temper", "Rivet", "Cognera Harness"]);
   assert.deepEqual(
     [...line.matchAll(/<p class="story__headline">([^<]+)/g)].map((m) => m[1].replace(/&nbsp;/g, " ")),
-    ["O nápadu vždy rozhodne člověk.", "Zadání změní jen s vaším souhlasem.", "Bez schválení se nic nesloučí.", "Vizuální změny schvaluje člověk.", "Produkce chce druhé potvrzení.", "Pro každou úlohu doporučí vhodného agenta."],
+    ["Vyberete nápad podle ověřených zdrojů.", "Schválíte změny zadání.", "Rozhodnete, které změny se sloučí.", "Změny vzhledu schválíte podle snímků.", "Nasazení do produkce potvrdíte podruhé.", "Agenta vyberete sami nebo podle doporučení."],
   );
   assert.equal((line.match(/<li class="story__step/g) ?? []).length, 12);
   assert.equal((line.match(/<figure class="screen story__screen/g) ?? []).length, 12);
   // Forge is the core among the modules, and its plan is shown without the task's status bar.
   const forge = line.slice(line.indexOf('id="forge"'), line.indexOf('id="temper"'));
-  assert.ok(plain(forge).includes("Vývoj Jádro Forge Bez schválení se nic nesloučí. 01 Plán ke schválení. Forge rozepíše postup a počká, až ho schválíte. 02 Kontrola kódu."));
+  assert.ok(plain(forge).includes("Forge Rozhodnete, které změny se sloučí. Plán práce Kontrola kódu"));
   assert.ok(forge.includes('src="/assets/media/screens/forge-plan.webp"') && !forge.includes("forge-step-b.webp"));
   // No static boxes of claims and no pre-rendered scene: the story is the page's one pinned stage.
   assert.equal(body.includes('class="feature') || body.includes('class="evidence'), false);
@@ -57,7 +57,7 @@ test("expected: the proof shows the systems built in the factory", () => {
   const english = main(built("/en/"));
   assert.ok(hrefs(english).includes("https://cognera.cz/en/references/invoiceai"));
   assert.equal((english.match(/<li class="story__step/g) ?? []).length, 12);
-  assert.ok(plain(english).includes("Build Core Forge Nothing is merged without approval."));
+  assert.ok(plain(english).includes("Forge You decide what gets merged. Implementation plan Code review"));
 });
 
 test("expected: one primary action; the proof links Cognera's references; the page describes itself", () => {

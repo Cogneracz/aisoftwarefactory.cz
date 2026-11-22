@@ -7,12 +7,12 @@ import { built, currentNav, h1, h2s, main, plain, primaryButtons, sectionIds } f
 const html = built("/forge/");
 
 test("expected: the page opens with what Forge does and one action", () => {
-  assert.equal(h1(html), "Od zadání k hotovému, prověřenému kódu.");
+  assert.equal(h1(html), "Schválíte plán. Forge napíše kód.");
   const hero = main(html).slice(0, main(html).indexOf("</section>"));
   assert.ok(hero.includes('<span class="tag">Jádro</span>') && hero.includes("<svg"));
-  assert.ok(plain(hero).includes("Napíšete zadání. Forge podle něj připraví plán"));
+  assert.ok(plain(hero).includes("Projdete si změny i výsledky testů"));
   assert.equal(primaryButtons(hero).length, 1);
-  assert.ok(hero.includes('data-film-small="/assets/media/film/forge-small.mp4"') && hero.includes('data-film-cut="small"'));
+  assert.ok(hero.includes("data-hero-promo") && hero.includes('src="/assets/media/film/forge-relay.mp4"'));
   assert.deepEqual(currentNav(html), ["Forge"]);
 });
 

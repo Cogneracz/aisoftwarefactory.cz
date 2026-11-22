@@ -9,9 +9,13 @@ import { attrs, cls, need, t } from "../lib/html.mjs";
 import { content } from "../content/index.mjs";
 import { film, object3d } from "../content/media3d.mjs";
 import { icon } from "./icons.mjs";
-import { ghostWord } from "./module-story.mjs";
 import { MARK_SLUGS } from "./product-mark.mjs";
 import { sectionHead } from "./rich.mjs";
+
+function ghostWord(name) {
+  const word = String(need(name, "A part's name")).trim().split(/\s+/).at(-1);
+  return { word, fit: Math.round(Math.min(1, 5.6 / word.length) * 100) / 100 };
+}
 
 export const FAQ_RANGE = [6, 12];
 

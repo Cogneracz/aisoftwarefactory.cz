@@ -51,16 +51,71 @@ function mount(figure, narrow) {
   ).observe(figure);
 }
 
+/** The native hero player stays usable with sound when automatic playback is unavailable. */
+function watchPromo(video, doc, win, reducedMotion) {
+  const connection = win.navigator.connection;
+  const prefersStill = () => reducedMotion.matches || connection?.saveData === true;
+  if (prefersStill() || !video.paused || video.currentTime !== 0) return;
+
+  let visible = false;
+  let attempted = false;
+  const listeners = new AbortController();
+  const options = { signal: listeners.signal };
+  const observer = new win.IntersectionObserver((entries) => {
+    visible = entries.at(-1).isIntersecting;
+    update();
+  });
+
+  function release() {
+    listeners.abort();
+    observer.disconnect();
+  }
+
+  function update() {
+    if (listeners.signal.aborted) return;
+    if (!visible || doc.hidden || prefersStill()) {
+      // Only an untouched, automatically started film belongs to the page.
+      if (attempted) {
+        release();
+        video.pause();
+      }
+      return;
+    }
+    if (attempted) return;
+    attempted = true;
+    const previousMute = video.muted;
+    video.muted = true;
+    video.play().catch(() => {
+      // A rejected automatic start leaves native Play ready for the visitor.
+      if (video.paused && !listeners.signal.aborted) video.muted = previousMute;
+      release();
+    });
+  }
+
+  // Once the visitor uses the controls, scrolling and tab switches are theirs too.
+  for (const event of ["pointerdown", "keydown", "pause", "ended"]) video.addEventListener(event, release, options);
+  video.addEventListener("play", () => { if (!attempted) release(); }, options);
+  video.addEventListener("volumechange", () => { if (!video.muted) release(); }, options);
+  doc.addEventListener("visibilitychange", update, options);
+  reducedMotion.addEventListener("change", update, options);
+  connection?.addEventListener("change", update, options);
+  observer.observe(video);
+}
+
 export function initFilms(doc = document) {
+  const win = doc.defaultView;
+  if (!win?.IntersectionObserver) return;
+  const reducedMotion = win.matchMedia("(prefers-reduced-motion: reduce)");
+  const promo = doc.querySelector("video[data-hero-promo]");
+  if (promo) watchPromo(promo, doc, win, reducedMotion);
   const figures = [...doc.querySelectorAll("[data-film]")];
-  if (figures.length === 0 || !("IntersectionObserver" in window)) return;
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const saveData = navigator.connection?.saveData === true;
-  if (filmPlan({ reducedMotion, saveData }) === "still") {
+  if (figures.length === 0) return;
+  const saveData = win.navigator.connection?.saveData === true;
+  if (filmPlan({ reducedMotion: reducedMotion.matches, saveData }) === "still") {
     // The picture of a film that cannot play is its last frame (the styles read this class).
     figures.forEach((figure) => figure.classList.add("is-still"));
     return;
   }
-  const narrow = window.matchMedia("(max-width: 767px)").matches;
+  const narrow = win.matchMedia("(max-width: 767px)").matches;
   for (const figure of figures) mount(figure, narrow);
 }

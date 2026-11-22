@@ -48,12 +48,12 @@ test("expected: the page presents modules as parts of Forge and each leads to it
 });
 
 test("edge: the in-page index jumps to the chapters; no module is called a tool or an application", () => {
-  const index = main(html).slice(main(html).indexOf("module-index"), main(html).indexOf('id="bellows"'));
+  const index = main(html).slice(main(html).indexOf("module-index"), main(html).indexOf('class="story"'));
   assert.deepEqual(hrefs(index), ["#bellows", "#anvil", "#temper", "#rivet", "#harness"]);
   const text = plain(main(html));
   assert.equal(/nástroj/i.test(text), false);
   assert.equal(/aplikac\S* (Bellows|Anvil|Temper|Rivet|Harness)/.test(text), false);
-  assert.equal((text.match(/\bModul\b/g) ?? []).length, 5);
+  assert.doesNotMatch(text, /\bModul\b/, "the common module badge is redundant on each chapter");
 });
 
 test("error: a story without the link label or with a module missing stops the page", () => {

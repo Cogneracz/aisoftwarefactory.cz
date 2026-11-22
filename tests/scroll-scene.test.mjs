@@ -29,16 +29,16 @@ test("expected: the line's six stops are the five steps with their decisions, th
   assert.deepEqual(captions.map((c) => c.slug), [...LINE_ORDER, "harness"]);
   assert.deepEqual(captions.map((c) => c.name), ["Průzkum", "Zadání", "Vývoj", "Ověření", "Nasazení", "Základ"]);
   assert.deepEqual(captions.map((c) => c.title), [
-    "O nápadu vždy rozhodne člověk.",
-    "Zadání změní jen s vaším souhlasem.",
-    "Bez schválení se nic nesloučí.",
-    "Vizuální změny schvaluje člověk.",
-    "Produkce chce druhé potvrzení.",
-    "Pro každou úlohu doporučí vhodného agenta.",
+    "Vyberete nápad podle ověřených zdrojů.",
+    "Schválíte změny zadání.",
+    "Rozhodnete, které změny se sloučí.",
+    "Změny vzhledu schválíte podle snímků.",
+    "Nasazení do produkce potvrdíte podruhé.",
+    "Agenta vyberete sami nebo podle doporučení.",
   ]);
   const english = lineCaptions(content("en"));
   assert.deepEqual(english.map((c) => c.name), ["Research", "Spec", "Build", "Verify", "Deploy", "Foundation"]);
-  assert.equal(english[2].title, "Nothing is merged without approval.");
+  assert.equal(english[2].title, "You decide what gets merged.");
 });
 
 test("expected: a scene holds a canvas with its description, the live captions, the rail and the stills", () => {
@@ -66,7 +66,7 @@ test("expected: the line scene names its own frames, per language, and has no li
   const en = content("en");
   const english = withLocale("en", () => scrollScene({ id: "linka", scene: "line-en", eyebrow: en.line.eyebrow, heading: en.line.heading, lead: en.line.lead, label: en.line.label, captions: lineCaptions(en), manifest: sceneManifest("line-en") }));
   assert.ok(english.includes('data-scene="line-en"') && english.includes("/assets/media/scenes/line-en/steps/small-3.avif"));
-  assert.ok(plain(english).includes("Five steps. Five decisions.") && plain(english).includes("Build. Nothing is merged without approval."));
+  assert.ok(plain(english).includes("Five steps. Five decisions.") && plain(english).includes("Build. You decide what gets merged."));
 });
 
 test("expected: a caption's words are separate units, the name leading, and read as the plain sentence", () => {

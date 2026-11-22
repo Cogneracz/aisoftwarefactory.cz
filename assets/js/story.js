@@ -153,7 +153,7 @@ export function initStory() {
       c.style.setProperty("--l", chapterLocal(g, i).toFixed(4));
       c.style.setProperty("--x", crossOffset(g, i, n).toFixed(4));
     }
-    // The chapter on stage: its pictures (screens, giant word) dissolve with its neighbours' (--p); its words (--t), like
+    // The chapter on stage: its screens dissolve with its neighbours' (--p); its words (--t), like
     // the canvas's one object, hand over in turn, out completely before the next come in, so no two texts overlap.
     const first = pos.chapter === 0;
     const lastChapter = pos.chapter === n - 1;

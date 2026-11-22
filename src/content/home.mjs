@@ -8,12 +8,10 @@ export const HOME = {
     description: "Forge je AI továrna na software od Cognery. Zadání dovede k hotovému, prověřenému kódu a moduly přidají průzkum, ověření i nasazení. Rozhodujete vy.",
   },
   hero: {
-    title: ["AI továrna na software,", "ve které rozhodujete vy."],
-    lead: "Forge dovede zadání k hotovému, prověřenému kódu. Moduly k němu přidají průzkum, zadání, ověření a nasazení.",
-    proof: "Forge vznikl v Cogneře a sami s ním pracujeme.",
-    film: "factory",
+    title: ["Od nápadu", "k fungující aplikaci."],
+    lead: "Forge rozdělí zadání na úkoly. Kód i výsledky testů si projdete před nasazením.",
   },
-  promo: { heading: "Forge v jedné minutě.", watch: "Přehrát film", download: "Stáhnout film" },
+  promo: { heading: "Forge v jedné minutě.", download: "Stáhnout film" },
   tagline: ["Agenti odvedou rutinu.", "Seniorní vývojáři hlídají architekturu.", "Kde je potřeba rozhodnout, továrna počká na člověka."],
   proof: {
     eyebrow: "V Cogneře",

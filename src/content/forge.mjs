@@ -11,10 +11,8 @@ export const FORGE = {
     mark: "forge",
     eyebrow: "Forge",
     tag: "Jádro",
-    title: ["Od zadání k hotovému,", "prověřenému kódu."],
-    lead: "Napíšete zadání. Forge podle něj připraví plán, napíše kód i testy a sám si práci zkontroluje. Kde je potřeba rozhodnout, počká na vás.",
-    proof: "Změny slučuje vždy člověk.",
-    film: "forge",
+    title: ["Schválíte plán.", "Forge napíše kód."],
+    lead: "Projdete si změny i výsledky testů a rozhodnete, co sloučit.",
   },
   steps: {
     eyebrow: "Postup",

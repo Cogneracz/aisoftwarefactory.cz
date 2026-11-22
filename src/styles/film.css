@@ -43,11 +43,8 @@
   background: var(--surface);
 }
 
-.promo {
-  scroll-margin-top: var(--spacing-700);
-}
-
 .promo__player {
+  scroll-margin-top: var(--spacing-900);
   display: block;
   width: 100%;
   height: auto;

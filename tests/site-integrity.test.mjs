@@ -85,7 +85,7 @@ test("error: a third-party resource, a relative address, a dead anchor and an un
     [home.replace('href="/forge/"', 'href="forge/"'), /neither root-relative nor https: forge\//],
     [home.replace('href="/forge/"', 'href="/kontakt/"'), /page that does not exist: \/kontakt\//],
     [home.replace(/alt="[^"]+" width="1920"/, 'alt="" width="1920"'), /picture without a description/],
-    [home.replace('data-film-large="/assets/', 'data-film-large="https://cdn.example.com/'), /not root-relative: https:\/\/cdn\.example\.com/],
+    [home.replace("<main", '<figure data-film-large="https://cdn.example.com/ambient.mp4"></figure><main'), /not root-relative: https:\/\/cdn\.example\.com/],
     [home.replace('poster="/assets/media/film/forge-relay-poster.webp"', 'poster="https://cdn.example.com/poster.webp"'), /resource is not root-relative/],
     [home.replace('src="/assets/media/film/forge-relay-en.vtt"', 'src="/assets/missing.vtt"'), /resource is missing on disk/],
     [home.replace('src="/assets/media/film/forge-relay.mp4"', 'src="relative.mp4"'), /resource is not root-relative/],

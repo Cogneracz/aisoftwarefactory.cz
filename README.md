@@ -31,7 +31,7 @@ A change is ready when `npm test` passes; one of its tests is the `--check` abov
 | `src/layout.mjs` | The document shell: head, navigation, main, footer |
 | `assets/js/` | Progressive enhancement only; every page reads and works without scripts. `scenes/` holds the scroll scenes' frame manifests |
 | `assets/media/scenes/` | The scroll scenes' frames: the assembly (the modules page), and the line in Czech and English (91 MB; a visitor loads 3 to 4 MB of one scene). No page uses the line's frames any more: the home page tells the line as a live story |
-| `assets/media/film/`, `assets/media/3d/` | The 3D films and object renders |
+| `assets/media/film/`, `assets/media/3d/` | The Forge promo, caption files, 3D films and object renders. The home and Forge pages play the promo muted in the hero. Visitors with reduced motion or Data Saver can start it with the player controls. |
 | `assets/media/screens/` | Real product screens on demo data; `forge-plan` is a crop of `forge-step-b` without the task's status bar |
 | `assets/media/references/` | The pictures of the systems built in the factory (the home page's proof section): the same files cognera.cz serves for its case studies |
 | `assets/js/story.js`, `assets/js/story-math.js` | The scroll story: the pinned stage, the spring, the layers. Told twice by `src/components/module-story.mjs`: the modules on `/moduly/` (three steps a chapter) and the line's five steps with Forge on the home page (two steps a chapter) |
@@ -50,7 +50,7 @@ A change is ready when `npm test` passes; one of its tests is the `--check` abov
   or padding, the look unchanged); below 768 px no labelling text is under 14 px. `tests/touch.test.mjs` keeps the
   rules; every hand-written script must parse (`tests/scripts-load.test.mjs`).
 - **The look.** The page is the studio plate of the renders and screens (`--bg`), so films and 3D objects stand on it
-  without a frame; one accent, the ember (`--accent`), marks place: captions, a chapter's number, the chapter on stage.
+  without a frame; the ember accent (`--accent`) marks the current chapter in the navigation.
 - **Nothing from another origin.** No cookies, no analytics, no third-party request. The page `/provozovatel/` says
   so, and the tests keep it true. Two scripts fetch, only from this site: the scroll scenes' frames and the story
   canvas's models and textures. XML namespace names in the canvas (SVG, MathML) are identifiers, never requested.

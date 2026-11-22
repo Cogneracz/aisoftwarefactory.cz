@@ -6,18 +6,15 @@ import { PRIMARY_ACTION } from "../src/content/site.mjs";
 
 const count = (html, part) => html.split(part).length - 1;
 
-test("expected: the home hero has one heading in two lines, a lead, one action, a proof line and the factory's film", () => {
-  const html = hero({ ...HOME.hero, layout: "stacked", action: PRIMARY_ACTION });
+test("expected: the home hero pairs the brief and demo link with the full promo", () => {
+  const html = hero({ ...HOME.hero, promo: HOME.promo, layout: "split", action: PRIMARY_ACTION });
   assert.equal(count(html, "<h1"), 1);
   assert.equal(count(html, 'class="hero__line"'), 2);
   assert.equal(count(html, "button--primary"), 1);
-  assert.ok(html.includes("AI továrna na software,") && html.includes("rozhodujete vy."));
-  const order = ["hero__title", "hero__lead", "hero__actions", "hero__proof", "hero__media"].map((c) => html.indexOf(c));
-  assert.deepEqual([...order].sort((a, b) => a - b), order);
-  assert.ok(html.includes('fetchpriority="high"'));
-  assert.ok(html.includes('class="hero hero--stacked"'));
-  assert.ok(html.includes('data-film-large="/assets/media/film/factory-large.mp4"') && html.includes("data-film-loop"));
-  assert.equal(html.includes("data-film-cut"), false);
+  assert.equal(count(html, "data-hero-promo"), 1);
+  assert.equal(count(html, "hero__proof"), 0);
+  for (const part of ["hero__title", "hero__lead", "hero__actions", "hero__media"]) assert.ok(html.includes(part));
+  assert.ok(html.includes('class="hero hero--split hero--promo"'));
 });
 
 test("edge: a plain hero needs no action or screen; a one-line title, a mark with a tag and a linked lead render", () => {
@@ -41,7 +38,7 @@ test("error: an empty title, a missing action or picture, two pictures and an un
   assert.throws(() => hero({ layout: "split", title: ["A"], screen: "forge-step-b" }), /needs its action/);
   assert.throws(() => hero({ layout: "split", title: ["A"], action: PRIMARY_ACTION }), /needs a film or a screen/);
   assert.throws(() => hero({ layout: "plain", title: ["A"], screen: "forge-step-b" }), /no picture/);
-  assert.throws(() => hero({ layout: "split", title: ["A"], action: PRIMARY_ACTION, screen: "forge-step-b", film: "forge" }), /not both/);
+  assert.throws(() => hero({ layout: "split", title: ["A"], action: PRIMARY_ACTION, screen: "forge-step-b", film: "forge" }), /one picture/);
   assert.throws(() => hero({ layout: "split", title: ["A"], action: PRIMARY_ACTION, film: "kladivo" }), /Unknown film/);
   assert.throws(() => hero({ layout: "wide", title: ["A"] }), /Unknown hero layout/);
 });

@@ -1,6 +1,4 @@
-/* The opening of a page. Its heading is the page's largest statement: heavy, tight, the first line in ink and the
-   following lines a shade back. The stacked hero (the home page) is centred above its film, which runs the full width
-   of the window with no frame: the film's backdrop is the page's own plate. */
+/* Shared page headings and media layouts. The promo uses the split layout above 1024px. */
 .hero {
   padding-block: var(--spacing-600) var(--spacing-700);
 }
@@ -228,13 +226,15 @@ html.is-lang-arrival :is(.hero__copy > *, .hero__media) {
   }
 }
 
-.hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--spacing-100);
+/* Keep the full picture and its controls visible alongside the short introduction. */
+.hero--promo .hero__media {
+  width: 100%;
+  animation: none;
 }
 
-.hero--stacked .hero__actions {
-  justify-content: center;
+@media (min-width: 1024px) {
+  .hero--promo .hero__grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 8fr);
+    gap: var(--spacing-500);
+  }
 }

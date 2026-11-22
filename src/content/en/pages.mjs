@@ -24,12 +24,10 @@ export const HOME_EN = {
     description: "Forge is the AI software factory from Cognera. It takes a spec to finished, verified code, and modules add research, verification, and deployment. You decide.",
   },
   hero: {
-    title: ["The AI software factory", "where you decide."],
-    lead: "Forge takes a spec to finished, verified code. Its modules add research, specs, verification, and deployment.",
-    proof: "Forge was made at Cognera, and we use it in our own work.",
-    film: "factory",
+    title: ["From an idea", "to a working app."],
+    lead: "Forge breaks your brief into tasks. You can review the code and test results before it goes live.",
   },
-  promo: { heading: "Forge in one minute.", watch: "Watch the film", download: "Download the film" },
+  promo: { heading: "Forge in one minute.", download: "Download the film" },
   tagline: ["Agents handle the routine work.", "Senior engineers watch over the architecture.", "Where a decision is needed, the factory waits for a person."],
   proof: {
     eyebrow: "At Cognera",
@@ -48,13 +46,13 @@ export const LINE_EN = {
   label:
     "The camera moves along the Forge line. Behind each object, the real screen rises: Bellows, Anvil, Forge, Temper, and Rivet. At the end, all five stand on the shared foundation of Cognera Harness.",
   steps: [
-    { slug: "bellows", name: "Bellows", role: "Research", does: "Finds what’s worth building.", decides: "A person always decides on an idea." },
-    { slug: "anvil", name: "Anvil", role: "Spec", does: "Clarifies the spec before any code is written.", decides: "It changes a spec only with your consent." },
-    { slug: "forge", name: "Forge", role: "Build", does: "Turns a spec into finished, verified code.", decides: "Nothing is merged without approval." },
-    { slug: "temper", name: "Temper", role: "Verify", does: "Verifies that your app works.", decides: "People approve visual changes." },
-    { slug: "rivet", name: "Rivet", role: "Deploy", does: "Deploys only a verified, approved version.", decides: "Production needs a second confirmation." },
+    { slug: "bellows", name: "Bellows", role: "Research", does: "Finds what’s worth building.", decides: "Choose an idea backed by evidence." },
+    { slug: "anvil", name: "Anvil", role: "Spec", does: "Clarifies the spec before any code is written.", decides: "Approve changes to the brief." },
+    { slug: "forge", name: "Forge", role: "Build", does: "Turns a spec into finished, verified code.", decides: "You decide what gets merged." },
+    { slug: "temper", name: "Temper", role: "Verify", does: "Verifies that your app works.", decides: "Compare screenshots before you approve." },
+    { slug: "rivet", name: "Rivet", role: "Deploy", does: "Deploys only a verified, approved version.", decides: "Confirm again before production." },
   ],
-  base: { slug: "harness", name: "Cognera Harness", role: "Foundation", does: "Recommends the right agent for each task." },
+  base: { slug: "harness", name: "Cognera Harness", role: "Foundation", does: "Pick an agent or use the recommendation." },
   stills: [
     "The bellows, and behind them a screen of evidence from the web with three verified sources.",
     "The anvil, and behind it a screen with two answered questions about an invoice export.",
@@ -91,10 +89,8 @@ export const FORGE_EN = {
     mark: "forge",
     eyebrow: "Forge",
     tag: "Core",
-    title: ["From spec to finished,", "verified code."],
-    lead: "You write the spec. Forge turns it into a plan, writes the code and the tests, and checks its own work. Where a decision is needed, it waits for you.",
-    proof: "A person always merges.",
-    film: "forge",
+    title: ["You approve the plan.", "Forge writes the code."],
+    lead: "Review the changes and test results, then decide what to merge.",
   },
   steps: {
     eyebrow: "Process",

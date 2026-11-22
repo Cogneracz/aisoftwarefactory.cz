@@ -85,7 +85,7 @@ test("expected: every page names its language versions, and the bar leads to the
 
 test("expected: the English pages are English throughout", () => {
   const home = built("/en/");
-  assert.equal(h1(home), "The AI software factory where you decide.");
+  assert.equal(h1(home), "From an idea to a working app.");
   assert.ok(home.includes("<title>AI software factory | Forge by Cognera</title>"));
   assert.ok(home.includes('<meta property="og:locale" content="en_US">') && home.includes('<meta property="og:locale:alternate" content="cs_CZ">'));
   assert.ok(home.includes('content="https://aisoftwarefactory.cz/assets/og-en.png"'));
@@ -95,14 +95,14 @@ test("expected: the English pages are English throughout", () => {
   assert.ok(home.includes('data-story="bellows,anvil,forge,temper,rivet,harness"') && !home.includes('data-scene="'));
   assert.ok(built("/en/modules/").includes('<section class="scene" id="skladani" aria-label="Modules" data-scene="assembly">'));
   const text = plain(main(home));
-  for (const part of ["Five steps. Five decisions.", "Nothing is merged without approval.", "A factory we work in ourselves.", "Show us your backlog."]) assert.ok(text.includes(part), part);
+  for (const part of ["Five steps. Five decisions.", "You decide what gets merged.", "A factory we work in ourselves.", "Show us your backlog."]) assert.ok(text.includes(part), part);
   assert.equal(/[ěščřžůďťň]/i.test(text), false, "no Czech sentence on the English home page");
   const links = hrefs(home);
   for (const href of ["/en/forge/", "/en/modules/", "/en/operator/", "/en/modules/#rivet", "https://cognera.cz/en/references", "https://cognera.cz/en/privacy"]) assert.ok(links.includes(href), href);
   assert.equal(links.some((h) => h === "/forge/" || h === "/moduly/#rivet"), false, "an English page links English pages");
   assert.ok(built("/en/modules/").includes("https://cognera.cz/en/products/rivet"));
   assert.ok(plain(built("/en/operator/")).includes("company ID (IČO) 23743514"));
-  assert.equal(h1(built("/en/forge/")), "From spec to finished, verified code.");
+  assert.equal(h1(built("/en/forge/")), "You approve the plan. Forge writes the code.");
 });
 
 test("edge: the one 404 page is Czech, offers English and belongs to no language pair", async () => {

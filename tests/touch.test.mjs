@@ -26,16 +26,29 @@ test("edge: phones get 14 px labels where 12 px was used; wider screens keep the
     ["base.css", ".tag", "var(--caption-1)"],
     ["reference-showcase.css", ".ref__built", "var(--caption-1)"],
     ["step-sequence.css", ".step__number", "var(--caption-1)"],
-    ["module-story.css", ".story__number", "var(--caption-1)"],
   ];
   for (const [file, selector, font] of pairs) {
     const rules = await css(file);
     assert.equal(value(inMedia(rules, selector, "max-width: 767px"), "font"), font, `${file} ${selector}`);
     assert.match(value(rules.find((r) => r.selector === selector && r.context.length === 0), "font"), /caption-[345]/, `${selector} keeps its smaller style above phones`);
   }
+  const mark = (await css("module-story.css")).find((r) => r.selector === "html.js .story.is-motion .story__mark" && !r.context.length);
+  assert.equal(value(mark, "min-height"), "44px");
+  assert.equal(value(mark, "font"), "var(--body-4)");
   // The scene's rail labels (12 px) are not shown on phones at all.
   const scene = await css("scroll-scene.css");
   assert.equal(value(inMedia(scene, ".scene__seg b", "max-width: 767px"), "display"), "none");
+});
+
+test("edge: six mobile chapter links reserve room for complete product words and a tap target", async () => {
+  const rules = await css("module-story.css");
+  const rail = rules.find((r) => r.selector === "html.js .story.is-motion .story__progress" && !r.context.length);
+  const mark = rules.find((r) => r.selector === "html.js .story.is-motion .story__mark" && !r.context.length);
+  assert.equal(value(rail, "grid-auto-columns"), "minmax(min-content, 1fr)");
+  assert.equal(value(rail, "gap"), "var(--spacing-50)");
+  assert.equal(value(mark, "overflow-wrap"), "normal");
+  assert.equal(value(mark, "min-width"), "44px");
+  assert.equal(value(mark, "min-height"), "44px");
 });
 
 test("error: no touch rule enlarges what people see; only invisible areas and padding change", async () => {

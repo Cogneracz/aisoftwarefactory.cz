@@ -1,7 +1,7 @@
 /** The Forge page: what the core does, its six steps from a brief to a merge, how it works, proof, closing action. */
 import { ctaBand } from "../components/cta-band.mjs";
 import { featureList } from "../components/feature-list.mjs";
-import { filmPreload } from "../components/film.mjs";
+import { promoPosterPreload } from "../components/promo-player.mjs";
 import { hero } from "../components/hero.mjs";
 import { stepSequence } from "../components/step-sequence.mjs";
 import { content } from "../content/index.mjs";
@@ -14,9 +14,9 @@ export function forgePage() {
   return page({
     path: pathOf("forge"),
     meta: c.forge.meta,
-    head: filmPreload(c.forge.hero.film, { cut: "small" }),
+    head: promoPosterPreload(),
     body: [
-      hero({ ...c.forge.hero, layout: "split", action: c.action, watch: { label: c.home.promo.watch, href: `${pathOf("home")}#film` } }),
+      hero({ ...c.forge.hero, layout: "split", action: c.action, promo: c.home.promo }),
       stepSequence({ id: "postup", eyebrow: c.forge.steps.eyebrow, heading: c.forge.steps.heading, steps: c.forge.steps.items }),
       featureList({ id: "prace", ...c.forge.work, surface: true }),
       proofSection({ id: "cognera", ...c.home.proof }),

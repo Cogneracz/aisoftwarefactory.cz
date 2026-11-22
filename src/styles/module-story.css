@@ -1,9 +1,4 @@
-/* The scroll story (components/module-story.mjs, assets/js/story.js): the modules on their page, the line's five steps
-   on the home page. As written it is a list of still chapters; the script turns it into one pinned stage
-   (html.js .story.is-motion) built like a film frame: the part's name as a giant word at the back, its real screen as
-   a tilted card, the 3D object across the middle in front of both, the decision in large type in the lower left, and
-   the row of chapters along the bottom. The layers move at different speeds with the scroll. */
-
+/* The static chapters become one pinned stage when motion is enabled. */
 .story {
   background: var(--surface);
 }
@@ -14,30 +9,8 @@
 
 .story__grid {
   display: grid;
-  grid-template-areas: "cover" "copy" "proofs" "screens";
+  grid-template-areas: "cover" "copy" "screens";
   gap: var(--spacing-400);
-}
-
-/* What can be counted on at this step: short checked sentences. */
-.story__proofs {
-  grid-area: proofs;
-  display: grid;
-  gap: var(--spacing-100);
-  max-width: 26rem;
-}
-
-.story__proof {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-75);
-  font: var(--body-2);
-  color: var(--ink-2);
-}
-
-.story__proof .icon {
-  flex: none;
-  margin-top: var(--spacing-25);
-  color: var(--accent);
 }
 
 .story__cover {
@@ -53,32 +26,31 @@
   grid-area: screens;
 }
 
-/* The giant word and the row of chapters belong to the stage. */
-.story__ghost,
 .story__progress {
   display: none;
 }
 
-.story__role {
+/* Modules already have an index. The static home story uses ordinary fragment links. */
+.story[data-story-steps]:not(.is-motion) .story__progress {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-100) var(--spacing-300);
+  width: min(100% - 2 * var(--spacing-200), var(--container));
+  margin-inline: auto;
+}
+
+.story__identity {
   display: flex;
   align-items: center;
   gap: var(--spacing-100);
-  font: var(--body-4);
-  color: var(--ink-3);
 }
 
-.story__role .mark {
+.story__identity .mark {
   width: 40px;
   height: 40px;
 }
 
-.story__count {
-  color: var(--accent);
-  font-variant-numeric: tabular-nums;
-}
-
 .story__name {
-  margin-top: var(--spacing-200);
   font: var(--heading-4);
   letter-spacing: var(--tracking-tight);
   color: var(--ink);
@@ -95,44 +67,22 @@
 
 .story__steps {
   display: grid;
-  gap: var(--spacing-300);
-  margin-top: var(--spacing-400);
+  gap: var(--spacing-75);
+  margin-top: var(--spacing-300);
   padding: 0;
   list-style: none;
 }
 
-.story__number {
-  font: var(--caption-4);
-  color: var(--ink-3);
-}
-
-@media (max-width: 767px) {
-  .story__number {
-    font: var(--caption-1);
-  }
-}
-
 .story__step-title {
-  margin-top: var(--spacing-50);
-  font: var(--heading-6);
-  color: var(--ink);
-}
-
-.story__sentence {
-  margin-top: var(--spacing-50);
-  max-width: var(--measure);
   font: var(--body-3);
   color: var(--ink-2);
-  text-wrap: pretty;
 }
 
-/* A block of its own, so its top margin holds. */
 .story__more {
   display: inline-block;
   margin-top: var(--spacing-400);
 }
 
-/* Still: the first step's screen stands for the chapter. */
 .story__screen:not(:first-child) {
   display: none;
 }
@@ -154,16 +104,12 @@
 
   .story__grid {
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    grid-template-areas: "cover screens" "copy screens" "proofs screens";
+    grid-template-areas: "cover screens" "copy screens";
     column-gap: var(--spacing-700);
     align-items: start;
   }
 }
 
-/* ---------- Motion: one pinned stage (set by assets/js/story.js) ---------- */
-
-/* 60svh for each step of a chapter (three unless the story names fewer), plus the stage's own height so the last
-   chapter ends pinned. */
 html.js .story.is-motion .story__track {
   position: relative;
   height: calc(var(--chapters) * var(--steps, 3) * 60svh + 100svh - var(--spacing-800));
@@ -187,7 +133,6 @@ html.js .story.is-motion .story__chapter {
   pointer-events: none;
 }
 
-/* Chapters off stage are not painted; only the one on stage gets its own compositor layers. */
 html.js .story.is-motion .story__chapter:not(.is-current) {
   visibility: hidden;
 }
@@ -196,45 +141,24 @@ html.js .story.is-motion .story__chapter.is-current {
   pointer-events: auto;
 }
 
-/* A neighbour dissolving in or out beside the chapter on stage (assets/js/story.js): painted, not interactive. */
 html.js .story.is-motion .story__chapter.is-near {
   visibility: visible;
-}
-
-/* The giant word: the back layer and the slowest. --fit keeps a longer name about as wide as a short one. */
-html.js .story.is-motion .story__ghost {
-  display: block;
-  position: absolute;
-  z-index: 0;
-  top: 46%;
-  left: 50%;
-  font: var(--ghost-3);
-  letter-spacing: var(--tracking-ghost);
-  color: var(--ghost);
-  white-space: nowrap;
-  opacity: var(--p, 0);
-  transform: translate3d(calc(-50% + var(--x, 0) * var(--spacing-600)), calc((0.5 - var(--l, 0.5)) * var(--spacing-400)), 0) scale(var(--fit, 1));
-  pointer-events: none;
-  user-select: none;
-}
-
-/* On a phone's or tablet's stage there is no room for the guarantees; the film frame shows them. */
-html.js .story.is-motion .story__proofs {
-  display: none;
 }
 
 html.js .story.is-motion .story__grid {
   position: relative;
   height: 100%;
-  /* A column of the frame's width, never of its content's: the screens' stack no longer clips its cards, and an auto
-     column grew to 606 px on a 390 px phone, pushing the headline past the edge (15. 11. 2026). */
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas: "copy" "screens";
   grid-template-rows: auto minmax(0, 1fr);
   gap: var(--spacing-300);
 }
 
-/* Copy, in front of everything and slow. Its words hand over in turn (--t); the pictures behind dissolve (--p). */
+/* Adjacent screens can crossfade, but only the current chapter presents its copy. */
+html.js .story.is-motion .story__chapter:not(.is-current) .story__copy {
+  visibility: hidden;
+}
+
 html.js .story.is-motion .story__copy {
   position: relative;
   z-index: 3;
@@ -242,13 +166,12 @@ html.js .story.is-motion .story__copy {
   transform: translate3d(calc(var(--x, 0) * var(--spacing-600)), calc((0.5 - var(--l, 0.5)) * var(--spacing-400)), 0);
 }
 
-html.js .story.is-motion .story__role .mark {
+html.js .story.is-motion .story__identity .mark {
   width: 32px;
   height: 32px;
 }
 
 html.js .story.is-motion .story__name {
-  margin-top: var(--spacing-100);
   font: var(--heading-5);
 }
 
@@ -256,17 +179,13 @@ html.js .story.is-motion .story__headline {
   margin-top: var(--spacing-50);
 }
 
-/* The steps share one cell, so the copy never changes height: the step on stage fades in after the last one has
-   faded out. */
 html.js .story.is-motion .story__steps {
-  display: grid;
   margin-top: var(--spacing-200);
 }
 
 html.js .story.is-motion .story__step {
   grid-area: 1 / 1;
   opacity: 1;
-  /* Inherit, never "visible": a visible child would show through the chapter that is off stage (visibility: hidden). */
   visibility: inherit;
   transition:
     opacity var(--dur-fade) var(--ease) var(--dur-fade),
@@ -285,8 +204,6 @@ html.js .story.is-motion .story__more {
   margin-top: var(--spacing-100);
 }
 
-/* The screens: a stack of cards that floats behind the object, turned towards the middle of the stage; it turns a little
-   further as the chapter passes. */
 html.js .story.is-motion .story__screens {
   position: relative;
   z-index: 1;
@@ -299,13 +216,10 @@ html.js .story.is-motion .story__screens {
   transform-origin: right center;
 }
 
-html.js .story.is-motion .story__chapter:is(.is-current, .is-near) :is(.story__copy, .story__proofs, .story__screens, .story__ghost) {
+html.js .story.is-motion .story__chapter:is(.is-current, .is-near) :is(.story__copy, .story__screens) {
   will-change: transform, opacity;
 }
 
-/* Each step's screen is a card of its own in the stack; the still story's rule that hides all but the first does not
-   apply. Waiting cards stand back, up and to the right; the step's card is in front; the next one peeks behind it; the
-   cards of passed steps have slid away to the left. A step change is a move, not a dissolve. */
 html.js .story.is-motion .story__screen,
 html.js .story.is-motion .story__screen:not(:first-child) {
   display: block;
@@ -329,20 +243,12 @@ html.js .story.is-motion .story__screen.is-current {
   transform: none;
 }
 
-html.js .story.is-motion .story__screen.is-current + .story__screen {
-  z-index: 1;
-  opacity: 0.55;
-  transform: translate3d(5%, -6%, 0) scale(0.92);
-}
-
 html.js .story.is-motion .story__screen.is-past {
   z-index: 3;
   opacity: 0;
   transform: translate3d(-26%, 6%, 0) rotate(-3deg) scale(0.96);
 }
 
-/* The 3D object, the fastest layer: across the lower middle of the stage, in front of the card and behind the copy.
-   The frame is the container, so the object is placed in percentages of it. */
 html.js .story.is-motion .story__frame {
   display: block;
   position: absolute;
@@ -366,8 +272,6 @@ html.js .story.is-motion .story__object {
   display: block;
 }
 
-/* The row of chapters along the bottom of the stage: the ones passed in ink, the one on stage in the accent and
-   filling as it passes (--l), the rest quiet. Each is a link to its chapter. */
 html.js .story.is-motion .story__progress {
   position: absolute;
   z-index: 4;
@@ -375,17 +279,19 @@ html.js .story.is-motion .story__progress {
   bottom: var(--spacing-200);
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: minmax(0, 1fr);
-  gap: var(--spacing-75);
-  width: min(100% - 2 * var(--spacing-200), var(--container));
+  grid-auto-columns: minmax(min-content, 1fr);
+  gap: var(--spacing-50);
+  width: min(100% - 2 * var(--spacing-75), var(--container));
   transform: translateX(-50%);
 }
 
-/* On phones the names are 14 px and each mark is a 44 px tall touch target. */
 html.js .story.is-motion .story__mark {
   position: relative;
   display: grid;
-  gap: var(--spacing-25);
+  align-content: start;
+  min-width: 44px;
+  min-height: 44px;
+  overflow-wrap: normal;
   padding-block: var(--spacing-100);
   font: var(--body-4);
   color: var(--ink-3);
@@ -426,16 +332,7 @@ html.js .story.is-motion .story__mark:hover {
   color: var(--ink);
 }
 
-html.js .story.is-motion .story__mark-role {
-  display: none;
-}
-
-/* From md: the names in the row get their roles. */
 @media (min-width: 768px) {
-  html.js .story.is-motion .story__ghost {
-    font: var(--ghost-2);
-  }
-
   html.js .story.is-motion .story__screens {
     width: 62%;
   }
@@ -445,16 +342,6 @@ html.js .story.is-motion .story__mark-role {
     transform: translate3d(calc(-50% + var(--x, 0) * var(--spacing-900) * 2), calc((0.5 - var(--l, 0.5)) * var(--spacing-900)), 0);
   }
 
-  html.js .story.is-motion .story__mark {
-    font: var(--body-4);
-  }
-
-  html.js .story.is-motion .story__mark-role {
-    display: block;
-    font: var(--caption-2);
-    color: var(--ink-3);
-  }
-
   html.js .story.is-motion .story__progress {
     bottom: var(--spacing-300);
     gap: var(--spacing-100);
@@ -462,40 +349,21 @@ html.js .story.is-motion .story__mark-role {
   }
 }
 
-/* The film frame, from lg and in any landscape window from md: the giant word high in the middle, the card top right,
-   the object across the middle, the decision in the lower left with all the chapter's steps under it, the one on stage
-   with its sentence. */
 @media (min-width: 1024px), (min-width: 768px) and (orientation: landscape), (orientation: landscape) and (max-height: 480px) {
   html.js .story.is-motion .story__chapter {
     padding-block: var(--spacing-400) var(--spacing-900);
   }
 
-  html.js .story.is-motion .story__ghost {
-    top: 2%;
-    font: var(--ghost-1);
-  }
-
   html.js .story.is-motion .story__grid {
     grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
-    grid-template-areas: "proofs screens" "copy .";
-    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-areas: "copy screens";
+    grid-template-rows: minmax(0, 1fr);
     column-gap: var(--spacing-400);
     row-gap: var(--spacing-0);
   }
 
-  /* What can be counted on, in the frame's upper left: in front, moving with the copy. */
-  html.js .story.is-motion .story__proofs {
-    display: grid;
-    position: relative;
-    z-index: 3;
-    align-self: start;
-    padding-top: var(--spacing-400);
-    opacity: var(--t, var(--p, 0));
-    transform: translate3d(calc(var(--x, 0) * var(--spacing-600)), calc((0.5 - var(--l, 0.5)) * var(--spacing-600)), 0);
-  }
-
   html.js .story.is-motion .story__copy {
-    align-self: end;
+    align-self: center;
     padding-bottom: var(--spacing-400);
   }
 
@@ -508,37 +376,16 @@ html.js .story.is-motion .story__mark-role {
   }
 
   html.js .story.is-motion .story__steps {
-    gap: var(--spacing-200);
     margin-top: var(--spacing-300);
   }
 
-  html.js .story.is-motion .story__step {
-    grid-area: auto;
-  }
-
-  html.js .story.is-motion .story__step:not(.is-current) {
-    opacity: 0.4;
-    visibility: inherit;
-  }
-
-  html.js .story.is-motion .story__step:not(.is-current) .story__sentence {
-    display: none;
-  }
-
-  /* The sentence keeps to the copy's side of the frame, clear of the object. */
-  html.js .story.is-motion .story__sentence {
-    max-width: 30rem;
-    font: var(--title-2);
-  }
-
   html.js .story.is-motion .story__screens {
+    margin-top: var(--spacing-300);
     align-self: start;
     width: 86%;
     border-radius: var(--radius-3xl);
   }
 
-  /* The object keeps to the right half, under the card: the copy's column is never crossed (the owner's screenshot of
-     15. 11. 2026, Bellows's wide bellows over its headline). */
   html.js .story.is-motion .story__object {
     left: auto;
     right: 0;
@@ -554,26 +401,16 @@ html.js .story.is-motion .story__mark-role {
   }
 }
 
-/* Short windows (a laptop with its toolbars, a small window): everything a size down, so the copy, the card and the row
-   of chapters still fit the stage; the guarantees give way. */
 @media (min-width: 768px) and (max-height: 760px) {
-  html.js .story.is-motion .story__proofs {
-    display: none;
-  }
-
   html.js .story.is-motion .story__chapter {
     padding-block: var(--spacing-200) var(--spacing-800);
-  }
-
-  html.js .story.is-motion .story__ghost {
-    font: var(--ghost-2);
   }
 
   html.js .story.is-motion .story__copy {
     padding-bottom: var(--spacing-100);
   }
 
-  html.js .story.is-motion .story__role .mark {
+  html.js .story.is-motion .story__identity .mark {
     width: 28px;
     height: 28px;
   }
@@ -587,16 +424,7 @@ html.js .story.is-motion .story__mark-role {
   }
 
   html.js .story.is-motion .story__steps {
-    gap: var(--spacing-100);
     margin-top: var(--spacing-200);
-  }
-
-  html.js .story.is-motion .story__step-title {
-    font: var(--title-1);
-  }
-
-  html.js .story.is-motion .story__sentence {
-    font: var(--body-3);
   }
 
   html.js .story.is-motion .story__screens {
@@ -611,26 +439,6 @@ html.js .story.is-motion .story__mark-role {
   html.js .story.is-motion .story__progress {
     bottom: var(--spacing-200);
   }
-
-  html.js .story.is-motion .story__mark-role {
-    display: none;
-  }
-}
-
-/* Very short windows: only the step on stage, as on a phone. */
-@media (min-width: 768px) and (max-height: 600px) {
-  html.js .story.is-motion .story__step {
-    grid-area: 1 / 1;
-  }
-
-  html.js .story.is-motion .story__step:not(.is-current) {
-    opacity: 0;
-    visibility: hidden;
-  }
-
-  html.js .story.is-motion .story__step:not(.is-current) .story__sentence {
-    display: block;
-  }
 }
 
 @media print {
@@ -644,39 +452,21 @@ html.js .story.is-motion .story__mark-role {
     overflow: visible;
   }
 
-  .story__frame {
+  html.js .story.is-motion .story__frame {
     display: none;
   }
 }
 
-/* A phone on its side (up to 480 px tall): the frame without the part's name line, the step's sentence or the outward
-   link, a smaller headline, only the step on stage, and the row of chapters as bars that are still 48 px tall targets. */
 @media (orientation: landscape) and (max-height: 480px) {
   html.js .story.is-motion .story__chapter {
     padding-block: var(--spacing-100) var(--spacing-700);
-  }
-
-  html.js .story.is-motion .story__proofs,
-  html.js .story.is-motion .story__name,
-  html.js .story.is-motion .story__more,
-  html.js .story.is-motion .story__mark-name,
-  html.js .story.is-motion .story__mark-role {
-    display: none;
-  }
-
-  html.js .story.is-motion .story__step .story__sentence {
-    display: none;
-  }
-
-  html.js .story.is-motion .story__ghost {
-    font: var(--ghost-3);
   }
 
   html.js .story.is-motion .story__copy {
     padding-bottom: var(--spacing-0);
   }
 
-  html.js .story.is-motion .story__role .mark {
+  html.js .story.is-motion .story__identity .mark {
     width: 24px;
     height: 24px;
   }
@@ -688,19 +478,6 @@ html.js .story.is-motion .story__mark-role {
 
   html.js .story.is-motion .story__steps {
     margin-top: var(--spacing-100);
-  }
-
-  html.js .story.is-motion .story__step {
-    grid-area: 1 / 1;
-  }
-
-  html.js .story.is-motion .story__step:not(.is-current) {
-    opacity: 0;
-    visibility: hidden;
-  }
-
-  html.js .story.is-motion .story__step-title {
-    font: var(--title-2);
   }
 
   html.js .story.is-motion .story__screens {
@@ -717,6 +494,6 @@ html.js .story.is-motion .story__mark-role {
   }
 
   html.js .story.is-motion .story__mark {
-    padding-block: var(--spacing-600) var(--spacing-0);
+    min-height: 48px;
   }
 }

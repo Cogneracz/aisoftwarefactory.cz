@@ -7,20 +7,21 @@ import { promoPlayer } from "../src/components/promo-player.mjs";
 import { PROMO } from "../src/content/promo.mjs";
 import { built } from "./lib/pages.mjs";
 
-test("the full film plays on demand in both languages, linked from each Forge page", () => {
-  for (const home of ["/", "/en/"]) {
-    const html = built(home);
-    assert.ok(html.includes('href="#film"'));
-    assert.ok(built(home + "forge/").includes(`href="${home}#film"`));
-    const player = html.match(/<video class="promo__player"[\s\S]+?<\/video>/g);
-    assert.equal(player?.length, 1);
-    assert.match(player[0], / controls playsinline preload="none"/);
-    assert.doesNotMatch(player[0], /\b(autoplay|loop|muted)\b/);
-    assert.ok(player[0].includes(`src="${PROMO.video}" type="video/mp4"`));
-    assert.ok(player[0].includes(`poster="${PROMO.poster}"`));
-    const czech = player[0].match(/<track[^>]*srclang="cs"[^>]*>/)[0];
-    assert.equal(czech.includes(" default"), home === "/");
-    assert.match(player[0], /<track kind="captions" srclang="en"/);
+test("all four product entry pages have one accessible native hero film and localized captions", () => {
+  for (const path of ["/", "/en/", "/forge/", "/en/forge/"]) {
+    const html = built(path);
+    const opening = html.match(/<section class="hero [^"]*">([\s\S]*?)<\/section>/)[1];
+    assert.equal((html.match(/data-hero-promo/g) ?? []).length, 1);
+    const player = opening.match(/<video[^>]*data-hero-promo[\s\S]+?<\/video>/)[0];
+    assert.ok(player.includes('id="film"'));
+    assert.match(player, / controls playsinline preload="none"/);
+    assert.doesNotMatch(player, /\b(autoplay|loop|muted)\b/);
+    assert.ok(player.includes(`src="${PROMO.video}" type="video/mp4"`));
+    assert.ok(player.includes(`poster="${PROMO.poster}"`));
+    assert.match(player, /aria-label="[^"]+"/);
+    const selected = [...player.matchAll(/<track[^>]*srclang="([^"]+)"[^>]* default>/g)].map((m) => m[1]);
+    assert.deepEqual(selected, [path.startsWith("/en/") ? "en" : "cs"]);
+    assert.doesNotMatch(opening, /data-film-large|button--secondary/);
   }
 });
 
