@@ -33,7 +33,7 @@ export const CS = {
     privacy: "Zásady ochrany osobních údajů",
     operator: "Provozovatel a soukromí",
     consent: {
-      title: "Měření návštěvnosti",
+      title: "Cookies",
       message: "Můžeme pomocí Microsoft Clarity sledovat kliknutí, posouvání stránek a přehrávat průběh návštěv? Měření používá cookies.",
       accept: "Povolit měření",
       decline: "Odmítnout",

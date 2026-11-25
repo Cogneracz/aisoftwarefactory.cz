@@ -26,7 +26,7 @@ export const EN = {
     privacy: "Privacy policy",
     operator: "Operator and privacy",
     consent: {
-      title: "Website analytics",
+      title: "Cookies",
       message: "May we use Microsoft Clarity to see clicks, scrolling and session replays? It uses analytics cookies.",
       accept: "Allow analytics",
       decline: "Decline",

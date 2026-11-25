@@ -154,6 +154,10 @@ test("both languages render the matching privacy destination and choices only fo
   assert.match(cs, /href="\/provozovatel\/"/);
   assert.match(en, /Decline/);
   assert.match(en, /href="\/en\/operator\/"/);
+  for (const panel of [cs, en]) {
+    assert.match(panel, /<details>\s*<summary id="measurement-title">Cookies<\/summary>\s*<p>[^<]*Microsoft Clarity[^<]*<a /);
+    assert.match(panel, /<\/details>\s*<div class="consent-panel__actions">\s*<button [^>]*data-choice="denied"[^>]*>[^<]+<\/button>\s*<button [^>]*data-choice="granted"/);
+  }
   assert.doesNotMatch(cs, /<script|src=|<iframe/);
   assert.equal(consentPanel(""), "");
   assert.throws(() => consentPanel("/other.js"), /Invalid Clarity/);
