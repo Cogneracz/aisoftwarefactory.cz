@@ -28,7 +28,7 @@
 <link rel="preload" href="/assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/manrope-latin-ext-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" href="/assets/media/film/forge-relay-poster.webp" fetchpriority="high">
-<link rel="stylesheet" href="/assets/site.css?v=2">
+<link rel="stylesheet" href="/assets/site.css?v=3">
 <script>(function(d){d.classList.add("js");setTimeout(function(){if(!window.__siteReady)d.classList.remove("js")},4000)})(document.documentElement)</script>
 <script>(function gateTransition(win) {
 var doc = win.document;
@@ -64,7 +64,7 @@ if (event.viewTransition && !switched) event.viewTransition.skipTransition();
 });
 return switched;
 })(window)</script>
-<script type="module" src="/assets/js/site.js?v=2"></script>
+<script type="module" src="/assets/js/site.js?v=3"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"AI Software Factory","url":"https://aisoftwarefactory.cz/en/","inLanguage":"en","publisher":{"@type":"Organization","name":"Cognera s.r.o.","url":"https://cognera.cz/en"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Cognera s.r.o.","url":"https://cognera.cz/en","address":{"@type":"PostalAddress","streetAddress":"Panská 571","postalCode":"391 55","addressLocality":"Chýnov","addressCountry":"CZ"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is an AI software factory?","acceptedAnswer":{"@type":"Answer","text":"Forge is the AI software factory from Cognera. It takes a spec to finished, verified code. Its modules add research, specs, verification, and deployment."}},{"@type":"Question","name":"Who decides what gets merged and deployed?","acceptedAnswer":{"@type":"Answer","text":"Always a person. Nothing is merged without approval, and a person merges the changes. A production deployment needs a second confirmation."}},{"@type":"Question","name":"What does Forge do on its own, and where does it wait for me?","acceptedAnswer":{"@type":"Answer","text":"It turns the spec into a plan, writes the code and the tests, and checks its own work. Where a decision is needed, it waits for you."}},{"@type":"Question","name":"What if the spec is unclear?","acceptedAnswer":{"@type":"Answer","text":"Anvil reads the spec and compares it with the actual code of the project. Where something is missing or the spec contradicts itself, it asks a question and offers an answer. It changes the spec only with your consent."}},{"@type":"Question","name":"How do we know the finished app works?","acceptedAnswer":{"@type":"Answer","text":"Temper goes through it like a person, click by click in a real browser, and takes a screenshot at every step. People approve visual changes."}},{"@type":"Question","name":"How does deployment work?","acceptedAnswer":{"@type":"Answer","text":"Rivet deploys only what passed verification and what a person approved. A deployment is done only once Rivet has also checked the live environment. An uncertain result is not passed off as a success."}},{"@type":"Question","name":"How do you tell what is worth building?","acceptedAnswer":{"@type":"Answer","text":"Bellows looks for what’s worth building and backs ideas with verified sources. When it finds nothing, it says so plainly. A person always decides on an idea."}},{"@type":"Question","name":"Who is behind Forge?","acceptedAnswer":{"@type":"Answer","text":"Cognera. Forge was made in our workshop, and we use it for our own work."}},{"@type":"Question","name":"How do I start?","acceptedAnswer":{"@type":"Answer","text":"Book a demo through the form on cognera.cz."}}]}</script>
@@ -224,10 +224,18 @@ return true;
 </nav>
 <div class="site-footer__legal">
 <p class="site-footer__imprint">Cognera&nbsp;s.r.o., Panská 571, 391&nbsp;55 Chýnov, company ID (IČO) 23743514, VAT ID (DIČ) CZ23743514. The company is registered in the commercial register kept by the Regional Court in České Budějovice, section C, insert 35720.</p>
-<p class="site-footer__meta"><a class="site-footer__link" href="/en/operator/">Operator and privacy</a><span>© 2026 Cognera&nbsp;s.r.o.</span></p>
+<p class="site-footer__meta"><a class="site-footer__link" href="/en/operator/">Operator and privacy</a><button type="button" class="site-footer__link" aria-controls="measurement-choice" aria-expanded="false" data-measurement-settings hidden>Analytics settings</button><span>© 2026 Cognera&nbsp;s.r.o.</span></p>
 </div>
 </div>
 </footer>
+<aside class="consent-panel" id="measurement-choice" aria-labelledby="measurement-title" data-project="zj7cr7zb5b" data-origin="https://aisoftwarefactory.cz" hidden>
+<p id="measurement-title" class="consent-panel__title">Website analytics</p>
+<p>May we use Microsoft Clarity to see clicks, scrolling and session replays? It uses analytics cookies. <a href="/en/operator/" class="link">Privacy details</a></p>
+<div class="consent-panel__actions">
+<button type="button" data-choice="denied">Decline</button>
+<button type="button" data-choice="granted">Allow analytics</button>
+</div>
+</aside>
 <script>(function(){var HANDOVER=0.18;
 function pinnedProgress(sectionTop, sectionHeight, stageTop, stageHeight, from = 0) {
 if (![sectionTop, sectionHeight, stageTop, stageHeight, from].every(Number.isFinite)) return 0;

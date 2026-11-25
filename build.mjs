@@ -29,6 +29,7 @@ export const STYLES = [
   "base.css",
   "site-nav.css",
   "site-footer.css",
+  "consent.css",
   "screen-frame.css",
   "film.css",
   "hero.css",

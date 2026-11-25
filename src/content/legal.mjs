@@ -1,14 +1,14 @@
 /**
  * The operator page: who runs the site and what happens to a visitor's data. Each privacy statement is either enforced
- * by the site's own tests (no cookies, no measuring, same-origin resources) or quoted from the host's documentation.
+ * by the site's own consent controls or quoted from the service provider's documentation.
  * A paragraph is a list of plain strings and links.
  */
-import { COGNERA, GITHUB_PRIVACY, PRIMARY_ACTION, imprintLine } from "./site.mjs";
+import { COGNERA, GITHUB_PRIVACY, MICROSOFT_PRIVACY, CLARITY_PROJECT_ID, PRIMARY_ACTION, imprintLine } from "./site.mjs";
 
 export const LEGAL = {
   meta: {
     title: "Provozovatel a soukromí",
-    description: "Kdo provozuje web aisoftwarefactory.cz a co se při návštěvě děje s vašimi údaji: žádné cookies, žádné měření a žádné zdroje třetích stran.",
+    description: "Kdo provozuje web aisoftwarefactory.cz, jak nakládá s údaji o návštěvách a jak můžete změnit svůj souhlas s měřením.",
   },
   heading: ["Provozovatel a soukromí"],
   lead: "Kdo tento web provozuje a co se při jeho návštěvě děje s vašimi údaji.",
@@ -25,9 +25,14 @@ export const LEGAL = {
       id: "soukromi",
       heading: "Soukromí",
       list: [
-        ["Web neukládá do vašeho zařízení žádné cookies."],
-        ["Neměří návštěvnost a nezobrazuje reklamu."],
-        ["Písma, obrázky i skripty se načítají přímo z této domény."],
+        ...(CLARITY_PROJECT_ID ? [
+          ["Microsoft Clarity se načte až po vašem souhlasu. Používá analytické cookies a zaznamenává kliknutí, posouvání stránek a průběh návštěvy. Podrobnosti uvádí ", { text: "Microsoft v prohlášení o ochraně osobních údajů", href: MICROSOFT_PRIVACY }, "."],
+          ["Volbu si prohlížeč pamatuje až 180 dní. Změnit ji můžete v patičce pod odkazem Nastavení měření. Reklamní měření nepoužíváme."],
+        ] : [
+          ["Web neukládá do vašeho zařízení žádné cookies."],
+          ["Neměří návštěvnost a nezobrazuje reklamu."],
+        ]),
+        ["Písma a obrázky se načítají přímo z této domény."],
         [
           "Web běží na službě GitHub Pages. Ta při návštěvě zaznamenává IP adresu návštěvníka kvůli bezpečnosti. Podrobnosti uvádí GitHub ve svém ",
           { text: "prohlášení o ochraně soukromí", href: GITHUB_PRIVACY },

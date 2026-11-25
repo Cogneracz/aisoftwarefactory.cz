@@ -28,7 +28,7 @@
 <link rel="preload" href="/assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/manrope-latin-ext-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" href="/assets/media/film/forge-relay-poster.webp" fetchpriority="high">
-<link rel="stylesheet" href="/assets/site.css?v=2">
+<link rel="stylesheet" href="/assets/site.css?v=3">
 <script>(function(d){d.classList.add("js");setTimeout(function(){if(!window.__siteReady)d.classList.remove("js")},4000)})(document.documentElement)</script>
 <script>(function gateTransition(win) {
 var doc = win.document;
@@ -64,7 +64,7 @@ if (event.viewTransition && !switched) event.viewTransition.skipTransition();
 });
 return switched;
 })(window)</script>
-<script type="module" src="/assets/js/site.js?v=2"></script>
+<script type="module" src="/assets/js/site.js?v=3"></script>
 
 </head>
 <body>
@@ -156,10 +156,18 @@ return switched;
 </nav>
 <div class="site-footer__legal">
 <p class="site-footer__imprint">Cognera&nbsp;s.r.o., Panská 571, 391&nbsp;55 Chýnov, company ID (IČO) 23743514, VAT ID (DIČ) CZ23743514. The company is registered in the commercial register kept by the Regional Court in České Budějovice, section C, insert 35720.</p>
-<p class="site-footer__meta"><a class="site-footer__link" href="/en/operator/">Operator and privacy</a><span>© 2026 Cognera&nbsp;s.r.o.</span></p>
+<p class="site-footer__meta"><a class="site-footer__link" href="/en/operator/">Operator and privacy</a><button type="button" class="site-footer__link" aria-controls="measurement-choice" aria-expanded="false" data-measurement-settings hidden>Analytics settings</button><span>© 2026 Cognera&nbsp;s.r.o.</span></p>
 </div>
 </div>
 </footer>
+<aside class="consent-panel" id="measurement-choice" aria-labelledby="measurement-title" data-project="zj7cr7zb5b" data-origin="https://aisoftwarefactory.cz" hidden>
+<p id="measurement-title" class="consent-panel__title">Website analytics</p>
+<p>May we use Microsoft Clarity to see clicks, scrolling and session replays? It uses analytics cookies. <a href="/en/operator/" class="link">Privacy details</a></p>
+<div class="consent-panel__actions">
+<button type="button" data-choice="denied">Decline</button>
+<button type="button" data-choice="granted">Allow analytics</button>
+</div>
+</aside>
 <script>(function(){var HANDOVER=0.18;
 function pinnedProgress(sectionTop, sectionHeight, stageTop, stageHeight, from = 0) {
 if (![sectionTop, sectionHeight, stageTop, stageHeight, from].every(Number.isFinite)) return 0;

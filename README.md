@@ -51,8 +51,7 @@ A change is ready when `npm test` passes; one of its tests is the `--check` abov
   rules; every hand-written script must parse (`tests/scripts-load.test.mjs`).
 - **The look.** The page is the studio plate of the renders and screens (`--bg`), so films and 3D objects stand on it
   without a frame; the ember accent (`--accent`) marks the current chapter in the navigation.
-- **Nothing from another origin.** No cookies, no analytics, no third-party request. The page `/provozovatel/` says
-  so, and the tests keep it true. Product screens and media are served from this site. SVG namespace names are identifiers.
+- **Optional analytics.** Set the public `CLARITY_PROJECT_ID` in `src/content/site.mjs` for this domain, then build both languages. An empty ID disables the integration. Initial resources are first-party. A visitor who opts in enables Microsoft Clarity with analytics storage granted and ad storage denied. Each visitor can change that choice in the footer. Localized details are on the operator page. Product screens and media are served from this site.
 - **Two languages, one shape.** English content has exactly the keys, lists and pictures of the Czech content; every
   page names its language versions (`hreflang`) and the bar leads to the same page in the other language.
 - **The switch keeps the place.** The language link carries the number of the section on screen and the share of it

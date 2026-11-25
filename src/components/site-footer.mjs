@@ -4,7 +4,7 @@
  */
 import { t } from "../lib/html.mjs";
 import { content } from "../content/index.mjs";
-import { COMPANY, SITE, isValidIco } from "../content/site.mjs";
+import { CLARITY_PROJECT_ID, COMPANY, SITE, isValidIco } from "../content/site.mjs";
 import { pathOf } from "../i18n/index.mjs";
 import { icon } from "./icons.mjs";
 import { productMark } from "./product-mark.mjs";
@@ -15,7 +15,7 @@ const column = (heading, items) =>
     .map((item) => `<li><a class="site-footer__link" href="${t(item.href)}">${item.external ? arrowLabel(item.label, icon("arrow-up-right", { size: 12 })) : t(item.label)}</a></li>`)
     .join("")}</ul></div>`;
 
-export function siteFooter({ company = COMPANY } = {}) {
+export function siteFooter({ company = COMPANY, measurement = Boolean(CLARITY_PROJECT_ID) } = {}) {
   if (!isValidIco(company.ico)) throw new Error(`Malformed IČO: ${JSON.stringify(company.ico)}`);
   const c = content();
   const modulesPath = pathOf("modules");
@@ -36,7 +36,7 @@ ${column(c.ui.footerCognera, [
 </nav>
 <div class="site-footer__legal">
 <p class="site-footer__imprint">${t(c.imprint)}</p>
-<p class="site-footer__meta"><a class="site-footer__link" href="${pathOf("operator")}">${t(c.ui.operator)}</a><span>© ${SITE.year} ${t(company.legalName)}</span></p>
+<p class="site-footer__meta"><a class="site-footer__link" href="${pathOf("operator")}">${t(c.ui.operator)}</a>${measurement ? `<button type="button" class="site-footer__link" aria-controls="measurement-choice" aria-expanded="false" data-measurement-settings hidden>${t(c.ui.consent.settings)}</button>` : ""}<span>© ${SITE.year} ${t(company.legalName)}</span></p>
 </div>
 </div>
 </footer>`;

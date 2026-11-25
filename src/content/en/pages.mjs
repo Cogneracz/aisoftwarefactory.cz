@@ -3,7 +3,7 @@
  * ../forge.mjs, ../modules.mjs, ../faq.mjs, ../legal.mjs). Slugs, screens and films are the same as in Czech.
  * The sentences are the English ones cognera.cz uses for the same Czech sentences.
  */
-import { GITHUB_PRIVACY } from "../site.mjs";
+import { GITHUB_PRIVACY, MICROSOFT_PRIVACY, CLARITY_PROJECT_ID } from "../site.mjs";
 
 export const ACTION_EN = { label: "Book a demo", href: "https://cognera.cz/en#contact-form" };
 
@@ -237,7 +237,7 @@ export const FAQ_EN = [
 export const LEGAL_EN = {
   meta: {
     title: "Operator and privacy",
-    description: "Who operates aisoftwarefactory.cz and what happens to your data when you visit: no cookies, no measuring, and nothing loaded from other sites.",
+    description: "Who operates aisoftwarefactory.cz, how your visit data is used, and how to change your analytics consent.",
   },
   heading: ["Operator and privacy"],
   lead: "Who runs this site and what happens to your data when you visit.",
@@ -251,9 +251,14 @@ export const LEGAL_EN = {
       id: "privacy",
       heading: "Privacy",
       list: [
-        ["The site stores no cookies on your device."],
-        ["It does not measure visits and shows no advertising."],
-        ["Fonts, pictures, and scripts load directly from this domain."],
+        ...(CLARITY_PROJECT_ID ? [
+          ["Microsoft Clarity loads only with your consent. It uses analytics cookies and records clicks, scrolling and session replays. Read the ", { text: "Microsoft Privacy Statement", href: MICROSOFT_PRIVACY }, " for more details."],
+          ["Your browser remembers your choice for up to 180 days. You can change it under Analytics settings in the footer. We do not use advertising analytics."],
+        ] : [
+          ["The site stores no analytics cookies."],
+          ["It does not measure visits or show advertising."],
+        ]),
+        ["Fonts and images load directly from this domain."],
         ["The site runs on GitHub Pages. On each visit, it logs the visitor’s IP address for security purposes. GitHub gives the details in its ", { text: "privacy statement", href: GITHUB_PRIVACY }, "."],
         ["The form for booking a demo is on cognera.cz. How Cognera handles the data from the form is described in its ", { text: "Privacy policy", href: COGNERA_EN.privacy }, "."],
       ],

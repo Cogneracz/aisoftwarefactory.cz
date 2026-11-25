@@ -5,7 +5,8 @@
  */
 import { attrs, esc, jsonForScript, need, t } from "./lib/html.mjs";
 import { content } from "./content/index.mjs";
-import { COMPANY, SITE } from "./content/site.mjs";
+import { CLARITY_PROJECT_ID, COMPANY, SITE } from "./content/site.mjs";
+import { consentPanel } from "./components/consent.mjs";
 import { siteFooter } from "./components/site-footer.mjs";
 import { siteNav } from "./components/site-nav.mjs";
 import { DEFAULT_LOCALE, OG_LOCALE, alternates, currentLocale, pathOf, routeOf } from "./i18n/index.mjs";
@@ -88,10 +89,10 @@ ${noindex ? "" : `<meta property="og:url" content="${esc(url)}">\n`}<meta proper
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 ${fonts}
-${head ? `${head}\n` : ""}<link rel="stylesheet" href="/assets/site.css?v=2">
+${head ? `${head}\n` : ""}<link rel="stylesheet" href="/assets/site.css?v=3">
 <script>(function(d){d.classList.add("js");setTimeout(function(){if(!window.__siteReady)d.classList.remove("js")},4000)})(document.documentElement)</script>
 <script>${HEAD_SCRIPT}</script>
-<script type="module" src="/assets/js/site.js?v=2"></script>
+<script type="module" src="/assets/js/site.js?v=3"></script>
 ${data}
 </head>
 <body>
@@ -100,7 +101,8 @@ ${siteNav({ current: path })}
 <main id="obsah">
 ${body}
 </main>
-${siteFooter()}
+${siteFooter({ measurement: !noindex && Boolean(CLARITY_PROJECT_ID) })}
+${noindex ? "" : consentPanel()}
 <script>${END_SCRIPT}</script>
 <span id="${END_ID}" hidden></span>
 </body>

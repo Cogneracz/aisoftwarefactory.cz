@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { CLARITY_PROJECT_ID } from "../src/content/site.mjs";
 import { rich } from "../src/components/rich.mjs";
 import { built, h1, h2s, hrefs, main, plain, primaryButtons } from "./lib/pages.mjs";
 import { pageProblems, scriptProblems } from "./lib/integrity.mjs";
@@ -15,7 +16,7 @@ test("expected: the operator is stated in full, with the way to get in touch", (
 });
 
 test("expected: the privacy statements name what the site does not do, its host and the form's policy", () => {
-  for (const part of ["žádné cookies", "Neměří návštěvnost a nezobrazuje reklamu", "přímo z této domény", "GitHub Pages", "IP adresu"]) assert.ok(text.includes(part), part);
+  for (const part of [...(CLARITY_PROJECT_ID ? ["Microsoft Clarity se načte až po vašem souhlasu", "Nastavení měření", "180 dní"] : ["žádné cookies", "Neměří návštěvnost"]), "přímo z této domény", "GitHub Pages", "IP adresu"]) assert.ok(text.includes(part), part);
   const links = hrefs(main(html));
   assert.ok(links.includes("https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"));
   assert.ok(links.includes("https://cognera.cz/ochrana-osobnich-udaju"));

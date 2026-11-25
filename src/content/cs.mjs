@@ -32,6 +32,14 @@ export const CS = {
     references: "Reference",
     privacy: "Zásady ochrany osobních údajů",
     operator: "Provozovatel a soukromí",
+    consent: {
+      title: "Měření návštěvnosti",
+      message: "Můžeme pomocí Microsoft Clarity sledovat kliknutí, posouvání stránek a přehrávat průběh návštěv? Měření používá cookies.",
+      accept: "Povolit měření",
+      decline: "Odmítnout",
+      details: "Podrobnosti o soukromí",
+      settings: "Nastavení měření",
+    },
     tagModule: MODULE_TAG,
     taglineLabel: "Princip",
     /** The link to this language from a page in another one. */

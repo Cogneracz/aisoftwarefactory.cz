@@ -24,10 +24,14 @@ export const COGNERA = {
   reference: (slug) => `https://cognera.cz/reference/${slug}`,
 };
 
+// Public project ID from the project's Microsoft Clarity setup screen.
+export const CLARITY_PROJECT_ID = "zj7cr7zb5b";
+export const MICROSOFT_PRIVACY = "https://privacy.microsoft.com/privacystatement";
+
 export const GITHUB_PRIVACY = "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement";
 
 /** The only hosts a link may leave the site for. */
-export const ALLOWED_EXTERNAL_HOSTS = ["cognera.cz", "docs.github.com"];
+export const ALLOWED_EXTERNAL_HOSTS = ["cognera.cz", "docs.github.com", "privacy.microsoft.com"];
 
 export const COMPANY = {
   legalName: "Cognera s.r.o.",

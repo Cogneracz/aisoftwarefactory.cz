@@ -46,7 +46,7 @@ test("expected: titles are unique and every primary button is the site's one act
   }
 });
 
-test("expected: nothing is loaded from another origin and no script stores, sends or measures", async () => {
+test("expected: all initial resources are local and only the consent controller can start Clarity or store the choice", async () => {
   for (const [path, page] of html) for (const url of resourceUrls(page)) assert.match(url, /^\/(?!\/)/, `${path}: ${url}`);
   const scripts = (await walk("assets/js", "/assets/js")).filter((f) => f.endsWith(".js"));
   assert.ok(scripts.includes("/assets/js/scenes/line-en.js"));

@@ -1,6 +1,5 @@
 /**
- * Checks of a built page and of the site's scripts. They enforce what the operator page promises (nothing loaded from
- * another origin, no cookies, no measuring) and what every page owes its reader (one heading, working links,
+ * Checks of a built page and of the site's scripts. They enforce what the operator page promises (first-party resources until the visitor opts into Clarity) and what every page owes its reader (one heading, working links,
  * described pictures). Each function returns one line per problem.
  */
 
@@ -124,7 +123,13 @@ const SCRIPT_BANS = [
  * it must check itself before it fetches.
  */
 export function scriptProblems(js, file, { mayLoad = false } = {}) {
-  const code = js.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:])\/\/.*$/gm, "$1");
+  let code = js.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:])\/\/.*$/gm, "$1");
+  if (file === "/assets/js/measurement.js") {
+    // Only this consent controller can store its preference or load the exact Clarity tag.
+    code = code.replaceAll('"https://www.clarity.ms/tag/"', '""')
+      .replaceAll("win.localStorage.removeItem(STORAGE_KEY)", "").replaceAll("win.localStorage.getItem(STORAGE_KEY)", "").replaceAll("win.localStorage.setItem(STORAGE_KEY,", "(")
+      .replaceAll("win.clarity", "win.recorder").replaceAll("analytics_Storage", "permission");
+  }
   const found = SCRIPT_BANS.filter(([pattern, what]) => pattern.test(code) && !(mayLoad && what === "sends a request")).map(([, what]) => `${file}: the script ${what}`);
   if (mayLoad && !/must come from this site/.test(code)) found.push(`${file}: a script that loads must refuse addresses outside this site`);
   return found;

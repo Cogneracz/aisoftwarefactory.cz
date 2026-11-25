@@ -2,6 +2,7 @@
 import { initFaq } from "./faq.js";
 import { initFilms } from "./film.js";
 import { initLang } from "./lang.js";
+import { initMeasurement } from "./measurement.js";
 import { initNav } from "./nav.js";
 import { initOpening } from "./opening.js";
 import { initReveal } from "./reveal.js";
@@ -13,6 +14,7 @@ import { initTagline } from "./tagline.js";
 // Tells the page's inline guard that the script arrived (see src/layout.mjs).
 window.__siteReady = true;
 
+initMeasurement();
 initNav();
 initReveal();
 initTagline();
