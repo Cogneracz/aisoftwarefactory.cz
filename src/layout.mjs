@@ -5,7 +5,7 @@
  */
 import { attrs, esc, jsonForScript, need, t } from "./lib/html.mjs";
 import { content } from "./content/index.mjs";
-import { CLARITY_PROJECT_ID, COMPANY, SITE } from "./content/site.mjs";
+import { CLARITY_PROJECT_ID, CLOUDFLARE_ANALYTICS_TOKEN, CLOUDFLARE_BEACON, COMPANY, SITE } from "./content/site.mjs";
 import { consentPanel } from "./components/consent.mjs";
 import { siteFooter } from "./components/site-footer.mjs";
 import { siteNav } from "./components/site-nav.mjs";
@@ -24,6 +24,13 @@ export const canonical = (path) => `${SITE.origin}${path}`;
 
 /** A language's home page keeps its own title; other pages add the site's name. */
 export const fullTitle = (path, title) => (routeOf(path)?.key === "home" ? title : `${title} | ${SITE.name}`);
+
+/** Cloudflare Web Analytics: cookieless page views, loaded on every indexed page without asking. */
+export function visitCounter(token = CLOUDFLARE_ANALYTICS_TOKEN) {
+  if (!token) return "";
+  if (!/^[a-f0-9]{32}$/.test(token)) throw new Error("Invalid Cloudflare Web Analytics token");
+  return `<script type="module" src="${CLOUDFLARE_BEACON}" data-cf-beacon='{"token": "${token}"}'></script>\n`;
+}
 
 export function organizationJsonLd() {
   return {
@@ -103,7 +110,7 @@ ${body}
 </main>
 ${siteFooter({ measurement: !noindex && Boolean(CLARITY_PROJECT_ID) })}
 ${noindex ? "" : consentPanel()}
-<script>${END_SCRIPT}</script>
+${noindex ? "" : visitCounter()}<script>${END_SCRIPT}</script>
 <span id="${END_ID}" hidden></span>
 </body>
 </html>

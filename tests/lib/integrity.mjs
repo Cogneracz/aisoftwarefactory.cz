@@ -1,7 +1,10 @@
 /**
- * Checks of a built page and of the site's scripts. They enforce what the operator page promises (first-party resources until the visitor opts into Clarity) and what every page owes its reader (one heading, working links,
+ * Checks of a built page and of the site's scripts. They enforce what the operator page promises (first-party resources apart from Cloudflare's cookieless beacon until the visitor opts into Clarity) and what every page owes its reader (one heading, working links,
  * described pictures). Each function returns one line per problem.
  */
+
+/** The one outside script a page may load: Cloudflare's cookieless beacon, exactly as Cloudflare gives it. */
+export const BEACON_TAG = /^<script type="module" src="https:\/\/static\.cloudflareinsights\.com\/beacon\.min\.js" data-cf-beacon='\{"token": "[a-f0-9]{32}"\}'>$/;
 
 export const attr = (tag, name) => new RegExp(`\\s${name}="([^"]*)"`).exec(tag)?.[1];
 
@@ -14,7 +17,7 @@ export function resourceUrls(html) {
   const out = [];
   // A canonical address and a language version are addresses of pages, not files the browser loads.
   for (const tag of tags(html, "link")) if (!["canonical", "alternate"].includes(attr(tag, "rel"))) out.push(attr(tag, "href"));
-  for (const tag of tags(html, "script")) if (attr(tag, "src") !== undefined) out.push(attr(tag, "src"));
+  for (const tag of tags(html, "script")) if (attr(tag, "src") !== undefined && !BEACON_TAG.test(tag)) out.push(attr(tag, "src"));
   for (const tag of tags(html, "img")) out.push(attr(tag, "src"));
   for (const tag of tags(html, "video")) out.push(attr(tag, "src"), attr(tag, "poster"));
   for (const tag of tags(html, "track")) out.push(attr(tag, "src") ?? "");
@@ -87,6 +90,7 @@ export function pageProblems(html, { path, origin, files, idsOf, allowedHosts, n
   if (/<(iframe|form|object|embed)[\s>]/.test(html)) say("an iframe, form or embedded object");
   for (const m of html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g)) {
     const [, attributes, body] = m;
+    if (BEACON_TAG.test(`<script${attributes}>`) && body === "") continue;
     if (/type="application\/ld\+json"/.test(attributes)) {
       try {
         JSON.parse(body);

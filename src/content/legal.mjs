@@ -3,7 +3,7 @@
  * by the site's own consent controls or quoted from the service provider's documentation.
  * A paragraph is a list of plain strings and links.
  */
-import { COGNERA, GITHUB_PRIVACY, MICROSOFT_PRIVACY, CLARITY_PROJECT_ID, PRIMARY_ACTION, imprintLine } from "./site.mjs";
+import { COGNERA, GITHUB_PRIVACY, MICROSOFT_PRIVACY, CLARITY_PROJECT_ID, CLOUDFLARE_ANALYTICS_TOKEN, CLOUDFLARE_PRIVACY, PRIMARY_ACTION, imprintLine } from "./site.mjs";
 
 export const LEGAL = {
   meta: {
@@ -32,6 +32,9 @@ export const LEGAL = {
           ["Web neukládá do vašeho zařízení žádné cookies."],
           ["Neměří návštěvnost a nezobrazuje reklamu."],
         ]),
+        ...(CLOUDFLARE_ANALYTICS_TOKEN ? [
+          ["Počet návštěv měří Cloudflare Web Analytics. Neukládá cookies ani nic jiného do vašeho zařízení a nesleduje jednotlivé návštěvníky. Podrobnosti uvádí ", { text: "Cloudflare v zásadách ochrany soukromí", href: CLOUDFLARE_PRIVACY }, "."],
+        ] : []),
         ["Písma a obrázky se načítají přímo z této domény."],
         [
           "Web běží na službě GitHub Pages. Ta při návštěvě zaznamenává IP adresu návštěvníka kvůli bezpečnosti. Podrobnosti uvádí GitHub ve svém ",

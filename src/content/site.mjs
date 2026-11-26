@@ -28,10 +28,15 @@ export const COGNERA = {
 export const CLARITY_PROJECT_ID = "zj7cr7zb5b";
 export const MICROSOFT_PRIVACY = "https://privacy.microsoft.com/privacystatement";
 
+// Public site token from Cloudflare Web Analytics (Cognera's Cloudflare account). It sets no cookies, so it needs no consent. Empty disables it.
+export const CLOUDFLARE_ANALYTICS_TOKEN = "8d0bb44dd8d546cb9e1def25873a4a2b";
+export const CLOUDFLARE_BEACON = "https://static.cloudflareinsights.com/beacon.min.js";
+export const CLOUDFLARE_PRIVACY = "https://www.cloudflare.com/privacypolicy/";
+
 export const GITHUB_PRIVACY = "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement";
 
 /** The only hosts a link may leave the site for. */
-export const ALLOWED_EXTERNAL_HOSTS = ["cognera.cz", "docs.github.com", "privacy.microsoft.com"];
+export const ALLOWED_EXTERNAL_HOSTS = ["cognera.cz", "docs.github.com", "privacy.microsoft.com", "www.cloudflare.com"];
 
 export const COMPANY = {
   legalName: "Cognera s.r.o.",

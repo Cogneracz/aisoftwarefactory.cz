@@ -3,7 +3,7 @@
  * ../forge.mjs, ../modules.mjs, ../faq.mjs, ../legal.mjs). Slugs, screens and films are the same as in Czech.
  * The sentences are the English ones cognera.cz uses for the same Czech sentences.
  */
-import { GITHUB_PRIVACY, MICROSOFT_PRIVACY, CLARITY_PROJECT_ID } from "../site.mjs";
+import { GITHUB_PRIVACY, MICROSOFT_PRIVACY, CLARITY_PROJECT_ID, CLOUDFLARE_ANALYTICS_TOKEN, CLOUDFLARE_PRIVACY } from "../site.mjs";
 
 export const ACTION_EN = { label: "Book a demo", href: "https://cognera.cz/en#contact-form" };
 
@@ -258,6 +258,9 @@ export const LEGAL_EN = {
           ["The site stores no analytics cookies."],
           ["It does not measure visits or show advertising."],
         ]),
+        ...(CLOUDFLARE_ANALYTICS_TOKEN ? [
+          ["Cloudflare Web Analytics counts visits. It stores no cookies or anything else on your device and does not track individual visitors. Read the ", { text: "Cloudflare Privacy Policy", href: CLOUDFLARE_PRIVACY }, " for more details."],
+        ] : []),
         ["Fonts and images load directly from this domain."],
         ["The site runs on GitHub Pages. On each visit, it logs the visitor’s IP address for security purposes. GitHub gives the details in its ", { text: "privacy statement", href: GITHUB_PRIVACY }, "."],
         ["The form for booking a demo is on cognera.cz. How Cognera handles the data from the form is described in its ", { text: "Privacy policy", href: COGNERA_EN.privacy }, "."],

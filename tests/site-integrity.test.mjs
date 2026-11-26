@@ -6,7 +6,7 @@ import { ROOT, render } from "../build.mjs";
 import { content } from "../src/content/index.mjs";
 import { ALLOWED_EXTERNAL_HOSTS, SITE } from "../src/content/site.mjs";
 import { PAGES } from "../src/pages/index.mjs";
-import { ids, pageProblems, resourceUrls, scriptProblems } from "./lib/integrity.mjs";
+import { BEACON_TAG, ids, pageProblems, resourceUrls, scriptProblems, tags } from "./lib/integrity.mjs";
 
 async function walk(dir, base = "") {
   const out = [];
@@ -118,4 +118,15 @@ test("error: a script that sets a cookie, stores, sends or measures is reported"
   assert.deepEqual(scriptProblems('if (!ok) throw new Error("frames must come from this site"); fetch(url);', "x.js", { mayLoad: true }), []);
   assert.match(scriptProblems("fetch(url);", "x.js", { mayLoad: true }).join(), /refuse addresses outside this site/);
   assert.match(scriptProblems('document.cookie = "a"; fetch(url); // must come from this site', "x.js", { mayLoad: true }).join(), /cookies/);
+});
+
+test("expected: every indexed page counts visits with Cloudflare's cookieless beacon, the 404 page does not", () => {
+  for (const p of PAGES) {
+    const page = html.get(p.path);
+    const beacons = tags(page, "script").filter((tag) => BEACON_TAG.test(tag));
+    assert.equal(beacons.length, p.path === "/404.html" ? 0 : 1, p.path);
+  }
+  const home = html.get("/");
+  const forged = home.replace("static.cloudflareinsights.com/beacon.min.js", "static.cloudflareinsights.com/other.js");
+  assert.match(pageProblems(forged, context("/")).join(), /not root-relative: https:\/\/static\.cloudflareinsights\.com\/other\.js/);
 });
